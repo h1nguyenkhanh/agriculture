@@ -1,0 +1,52 @@
+.process-wrapper {
+  padding: 10px 20px;
+  background-color: #fff;
+  margin-left: 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+    overflow: hidden;
+}
+
+.process-wrapper h2 {
+    font-size: 25px;
+}
+
+.btn {
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    margin-right: 5px;
+    padding-bottom: 5px !important;
+}
+
+.btn:hover {
+    color: #fff;
+    border: none;
+}
+
+.btn:focus {
+    color: #fff;
+}
+
+.btn-add:hover {
+    background-color: #00e673 !important;
+}
+
+.btn-edit:hover {
+    background-color: #4db2fa !important;
+}
+
+.btn-delete:hover {
+    background-color:#ff674d !important;
+}
+
+.search-input {
+    margin-top: 16px;
+}
+
+.search-input input {
+    outline: none;
+}
+

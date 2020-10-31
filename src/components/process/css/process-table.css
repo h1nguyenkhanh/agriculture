@@ -1,0 +1,25 @@
+.ant-spin-nested-loading {
+    /* height: 100%; */
+}
+.ant-spin-container {
+    height: 100%;
+}
+.ant-table {
+    height: 100%;
+}
+
+.ant-table-body {
+    min-height: 340px;
+  }
+
+.table-wrapper {
+  position: relative;
+  margin-top: 20px;
+}
+
+.table-wrapper .table-custom {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 500px;
+}

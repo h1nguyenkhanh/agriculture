@@ -1,12 +1,11 @@
 import React from "react";
 
-import Dashboard from 'components/dashboard/Dashboard'
-
+import MainRouter from 'navigation/MainRouter'
 
 function App() {
   return (
     <div className="App">
-      <Dashboard/>
+      <MainRouter/>
     </div>
   );
 }
