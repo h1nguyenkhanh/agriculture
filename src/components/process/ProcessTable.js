@@ -1,6 +1,6 @@
-import React from "react";
+import { Table } from "antd";
 import "antd/dist/antd.css";
-import { Table, Button, Layout } from "antd";
+import React from "react";
 import "./css/process-table.css";
 const columns = [
   {

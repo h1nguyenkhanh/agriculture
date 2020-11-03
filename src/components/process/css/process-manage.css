@@ -1,12 +1,12 @@
 .process-wrapper {
   padding: 10px 20px;
   background-color: #fff;
-  margin-left: 15px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   width: 100%;
     overflow: hidden;
+    height: 100%;
 }
 
 .process-wrapper h2 {

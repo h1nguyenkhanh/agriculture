@@ -1,13 +1,14 @@
-import React, {useState} from "react";
-import { Layout, Button, Input, Card, Modal } from "antd";
 import {
-  FormOutlined,
   FileAddOutlined,
   FileExcelOutlined,
+  FormOutlined,
 } from "@ant-design/icons";
+import { Button, Input, Layout, Modal } from "antd";
+import React, { useState } from "react";
+import { getProcessData } from "services/Api";
 import "./css/process-manage.css";
+import ProcessForm from "./ProcessForm";
 import ProcessTable from "./ProcessTable";
-import {getProcessData} from 'services/Api'
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -15,7 +16,7 @@ const { Search } = Input;
 getProcessData();
 
 export default function ManageProcess() {
-  const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false);
 
   function showModal() {
     setModalVisible(true);
@@ -67,15 +68,13 @@ export default function ManageProcess() {
       </div>
       <ProcessTable />
       <Modal
-          title="Basic Modal"
-          visible={modalVisible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Modal>
+        title="Thêm quy trình"
+        visible={modalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <ProcessForm />
+      </Modal>
     </Layout>
   );
 }

@@ -13,7 +13,7 @@ const firebaseConfig = {
   authDomain: "agriculture-e3485.firebaseapp.com",
   databaseURL: "https://agriculture-e3485.firebaseio.com",
   projectId: "agriculture-e3485",
-  storageBucket: "agriculture-e3485.appspot.com",
+  storageBucket: "gs://agriculture-e3485.appspot.com/",
   messagingSenderId: "217895315521",
   appId: "1:217895315521:web:9982e8301cd373b6b97ec0",
   measurementId: "G-Q9MBY65E37",
