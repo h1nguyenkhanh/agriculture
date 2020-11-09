@@ -5,19 +5,14 @@ import {
 } from "@ant-design/icons";
 import { Button, Input, Layout, Modal } from "antd";
 import React, { useState } from "react";
-import { getProcessData } from "services/Api";
 import "./css/process-manage.css";
 import ProcessForm from "./ProcessForm";
 import ProcessTable from "./ProcessTable";
 
-const { Content } = Layout;
 const { Search } = Input;
 
-getProcessData();
-
-export default function ManageProcess() {
+export default function ManageProcess(props) {
   const [modalVisible, setModalVisible] = useState(false);
-
   function showModal() {
     setModalVisible(true);
   }
@@ -66,7 +61,7 @@ export default function ManageProcess() {
           className="search-input"
         />
       </div>
-      <ProcessTable />
+        <ProcessTable activeProcess={props.activeProcess} />
       <Modal
         title="Thêm quy trình"
         visible={modalVisible}

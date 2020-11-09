@@ -1,13 +1,15 @@
-import { Layout, Menu, Affix } from "antd";
+import { Affix, Button, Layout, Menu } from "antd";
 import "antd/dist/antd.css";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Tools from "tools/Tools";
 import "./css/sidebar.css";
 
 const { Sider } = Layout;
 
-export default function SideBar() {
+export default function SideBar(props) {
   const [activeMenu, setActiveMenu] = useState(false);
+  const { processData, handleProcessClick } = props;
 
   function triggerMenu() {
     setActiveMenu(!activeMenu);
@@ -24,6 +26,7 @@ export default function SideBar() {
           <div className="bar2"></div>
           <div className="bar3"></div>
         </div>
+        <Button>Add</Button>
         <Menu
           mode="vertical"
           defaultSelectedKeys={["1"]}
@@ -32,12 +35,18 @@ export default function SideBar() {
           id="sidebar-menu"
           className={activeMenu ? "active" : ""}
         >
-          <Menu.Item key="1">
-            <Link to="/">Quy trình</Link>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <Link to="/">Nhật ký</Link>
-          </Menu.Item>
+          {processData &&
+            processData.map((item, index) => {
+              let linkUrl = `/${Tools.deleteMark(item.ProcessName)}`;
+              return (
+                <Menu.Item
+                  key={++index}
+                  onClick={() => handleProcessClick(item)}
+                >
+                  {item.ProcessName}
+                </Menu.Item>
+              );
+            })}
         </Menu>
       </Sider>
     </Affix>

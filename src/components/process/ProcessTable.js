@@ -1,38 +1,76 @@
-import { Table } from "antd";
+import { Table, Button } from "antd";
 import "antd/dist/antd.css";
-import React from "react";
+import firebase from "firebase/config";
+import React, { useEffect, useState, useContext } from "react";
+import Context from "components/context/Context";
 import "./css/process-table.css";
+import ProcessApi from "services/ProcessApi";
+
+var db = firebase.firestore();
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "Mã",
+    dataIndex: "DetailCode",
   },
   {
-    title: "Age",
-    dataIndex: "age",
+    title: "Tiêu đề",
+    dataIndex: "DetailTitle",
   },
   {
-    title: "Address",
-    dataIndex: "address",
+    title: "Nội dung",
+    dataIndex: "DetailContent",
+  },
+  {
+    title: "",
+    dataIndex: "action",
+    render: (text, record) => <Button size="middle">Chi tiết</Button>,
   },
 ];
 
-const data = [];
-for (let i = 0; i < 43; i++) {
-  data.push({
-    key: i,
-    name: `Edward King ${i}`,
-    age: 32,
-    address: `London, Park Lane no. ${i}`,
-  });
-}
-export default function ProcessTable() {
+export default function ProcessTable(props) {
+  const [rowCode, setRowCode] = useState(null);
+  const { activeProcess, isLoadingTable } = useContext(Context);
+  const [processDetail, setProcessDetail] = useState(null);
+
+  useEffect(() => {
+    if (activeProcess) {
+      let unsubscribe = db
+        .collection(`Process/${activeProcess.Id}/ProcessDetail`)
+        .onSnapshot(function (snapshot) {
+          let data = [];
+          snapshot.forEach(function (doc) {
+            let objData = { DetailId: doc.id, ...doc.data() };
+            data.push(objData);
+          });
+          setProcessDetail(data);
+        });
+      return function () {
+        unsubscribe();
+      };
+    }
+  }, [activeProcess]);
+
+  function onClickRow(record) {
+    return {
+      onClick: () => {
+        if (record.DetailCode === rowCode) {
+          setRowCode(null);
+        } else {
+          setRowCode(record.DetailCode);
+        }
+      },
+    };
+  }
+
+  function setRowClassName(record) {
+    return record.DetailCode === rowCode ? "rowSelected" : "";
+  }
+
   return (
     <div className="table-wrapper">
       <Table
-        rowSelection={{
-          type: "radio",
-        }}
+        bordered={true}
+        loading={isLoadingTable}
         sticky={true}
         pagination={{
           defaultPageSize: 10,
@@ -41,10 +79,14 @@ export default function ProcessTable() {
           position: ["bottomCenter"],
         }}
         columns={columns}
-        dataSource={data}
-        style={{height: "500px"}}
+        dataSource={processDetail}
+        style={{ height: "500px" }}
         scroll={{ y: 340 }}
         className={"table-custom"}
+        rowKey={(record) => record.DetailCode}
+        onRow={onClickRow}
+        rowClassName={setRowClassName}
+        size={"small"}
       />
     </div>
   );

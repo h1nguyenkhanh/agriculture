@@ -1,8 +1,7 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Upload, message } from "antd";
+import { Form, Input } from "antd";
+import UploadProcessImg from 'components/process/UploadProcessImg';
 import React from "react";
 import "./css/process-manage.css";
-import UploadProcessImg from 'components/process/UploadProcessImg'
 
 
 
@@ -26,6 +25,13 @@ export default function ProcessForm() {
       //   initialValues={{ modifier: "public" }}
     >
       <Form.Item
+        name="processCode"
+        label="Mã quy trình"
+        rules={[{ required: true, message: "Không được để trống trường này!" }]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
         name="processName"
         label="Tên quy trình"
         rules={[{ required: true, message: "Không được để trống trường này!" }]}
@@ -33,8 +39,8 @@ export default function ProcessForm() {
         <Input />
       </Form.Item>
       <Form.Item
-        name="upload"
-        label="Upload"
+        name="processAvatar"
+        label="Ảnh quy trình"
         valuePropName="fileList"
         getValueFromEvent={normFile}
       >

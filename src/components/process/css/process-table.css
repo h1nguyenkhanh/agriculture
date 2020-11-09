@@ -1,16 +1,18 @@
-.ant-spin-nested-loading {
-    /* height: 100%; */
-}
 .ant-spin-container {
-    height: 100%;
+  height: 100%;
 }
 .ant-table {
-    height: 100%;
+  height: 100%;
 }
 
 .ant-table-body {
-    min-height: 340px;
-  }
+  min-height: 340px;
+}
+
+.ant-table-body tr {
+  cursor: pointer;
+  transition: 0.5s !important;
+}
 
 .table-wrapper {
   position: relative;
@@ -18,8 +20,18 @@
 }
 
 .table-wrapper .table-custom {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    height: 500px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 500px;
 }
+
+.rowSelected {
+  background-color: rgba(102, 138, 255);
+  color: #fff;
+}
+
+.ant-table-tbody > tr.rowSelected:hover > td {
+  background: unset !important;
+}
+
