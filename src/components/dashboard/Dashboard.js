@@ -7,6 +7,13 @@ import React, { useEffect, useState } from "react";
 import firebase from "firebase/config";
 import "./css/dashboard.css";
 import Provider from "components/context/Provider";
+import InsertStep from "components/process/ProcessStep";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 var db = firebase.firestore();
 
@@ -37,9 +44,6 @@ export default function Dashboard() {
     );
   }
 
- 
-
-
   function handleProcessClick(process) {
     setActiveProcess(process);
   }
@@ -50,8 +54,8 @@ export default function Dashboard() {
     activeProcess,
     setActiveProcess,
     isLoadingTable,
-    setIsLoadingTable
-  }
+    setIsLoadingTable,
+  };
 
   return (
     <Provider value={providerProps}>
@@ -69,7 +73,14 @@ export default function Dashboard() {
               />
             </Col>
             <Col xs={24} sm={24} md={19} xl={21} style={{ height: "100%" }}>
-              <ProcessManage activeProcess={activeProcess} />
+              <Switch>
+                <Route path="/">
+                  <ProcessManage activeProcess={activeProcess} />
+                </Route>
+                <Route path="/step">
+                  <InsertStep />
+                </Route>
+              </Switch>
             </Col>
           </Row>
         </Layout>

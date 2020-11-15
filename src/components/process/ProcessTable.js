@@ -1,4 +1,4 @@
-import { Table, Button } from "antd";
+import { Table, Button, Space  } from "antd";
 import "antd/dist/antd.css";
 import firebase from "firebase/config";
 import React, { useEffect, useState, useContext } from "react";
@@ -22,13 +22,18 @@ const columns = [
   },
   {
     title: "",
-    dataIndex: "action",
-    render: (text, record) => <Button size="middle">Chi tiết</Button>,
+    fixed: 'right',
+    width: 150,
+    render: (text, record) => (
+      <Space size="middle">
+        <a>Sửa {record.ProcessName}</a>
+        <a>Xóa</a>
+      </Space>
+    ),
   },
 ];
 
 export default function ProcessTable(props) {
-  const [rowCode, setRowCode] = useState(null);
   const { activeProcess, isLoadingTable } = useContext(Context);
   const [processDetail, setProcessDetail] = useState(null);
 
@@ -50,22 +55,6 @@ export default function ProcessTable(props) {
     }
   }, [activeProcess]);
 
-  function onClickRow(record) {
-    return {
-      onClick: () => {
-        if (record.DetailCode === rowCode) {
-          setRowCode(null);
-        } else {
-          setRowCode(record.DetailCode);
-        }
-      },
-    };
-  }
-
-  function setRowClassName(record) {
-    return record.DetailCode === rowCode ? "rowSelected" : "";
-  }
-
   return (
     <div className="table-wrapper">
       <Table
@@ -84,8 +73,6 @@ export default function ProcessTable(props) {
         scroll={{ y: 340 }}
         className={"table-custom"}
         rowKey={(record) => record.DetailCode}
-        onRow={onClickRow}
-        rowClassName={setRowClassName}
         size={"small"}
       />
     </div>

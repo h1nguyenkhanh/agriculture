@@ -1,4 +1,6 @@
-import { Affix, Button, Layout, Menu } from "antd";
+import { Affix, Button, Layout, Menu, Input } from "antd";
+import { PlusOutlined } from '@ant-design/icons';
+
 import "antd/dist/antd.css";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
@@ -26,7 +28,9 @@ export default function SideBar(props) {
           <div className="bar2"></div>
           <div className="bar3"></div>
         </div>
-        <Button>Add</Button>
+        <form onSubmit={()=>console.log('oke')}>
+          <Input placeholder="Thêm quy trình" prefix={<PlusOutlined />} style={{paddingLeft: "5px", paddingRight: "5px", marginBottom: "10px"}}/>
+        </form>
         <Menu
           mode="vertical"
           defaultSelectedKeys={["1"]}
