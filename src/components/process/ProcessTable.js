@@ -4,7 +4,7 @@ import firebase from "firebase/config";
 import React, { useEffect, useState, useContext } from "react";
 import Context from "components/context/Context";
 import "./css/process-table.css";
-import ProcessApi from "services/ProcessApi";
+import ProcessApi from "services/ProductsApi";
 
 var db = firebase.firestore();
 const columns = [
@@ -56,7 +56,6 @@ export default function ProcessTable(props) {
   }, [activeProcess]);
 
   return (
-    <div className="table-wrapper">
       <Table
         bordered={true}
         loading={isLoadingTable}
@@ -69,12 +68,10 @@ export default function ProcessTable(props) {
         }}
         columns={columns}
         dataSource={processDetail}
-        style={{ height: "500px" }}
-        scroll={{ y: 340 }}
+        scroll={{ y: 500}}
         className={"table-custom"}
         rowKey={(record) => record.DetailCode}
         size={"small"}
       />
-    </div>
   );
 }
