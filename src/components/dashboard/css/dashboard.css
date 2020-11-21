@@ -1,10 +1,8 @@
 .main-layout {
     display: flex;
     flex-direction: column;
-    height: 300vh;
 }
 
 .content-layout {
-    padding: 10px;
     margin-top: 64px;
 }

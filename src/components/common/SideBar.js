@@ -18,7 +18,7 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SideBar(props) {
-  const { productsData } = props;
+  const { productsData, handleProductOnClick } = props;
 
   function renderProductList() {
     let count = 0;
@@ -33,7 +33,7 @@ export default function SideBar(props) {
           >
             {item.productList &&
               item.productList.map((item, index) => {
-                return <Menu.Item key={++count}>{item.name}</Menu.Item>;
+                return <Menu.Item key={++count} onClick={() => handleProductOnClick(item)}>{item.name}</Menu.Item>;
               })}
           </SubMenu>
         );
@@ -42,7 +42,7 @@ export default function SideBar(props) {
   }
 
   return (
-    <Sider width={"auto"} className="site-layout-sider-light sidebar-wrapper">
+    <Sider width={"250px"} className="site-layout-sider-light sidebar-wrapper">
       <form onSubmit={() => console.log("oke")}>
         <Input
           placeholder="Thêm quy trình"
@@ -55,7 +55,6 @@ export default function SideBar(props) {
         />
       </form>
       <Menu
-        style={{ width: 256 }}
         defaultSelectedKeys={['1']}
         defaultOpenKeys={['sub1']}
         mode="inline"

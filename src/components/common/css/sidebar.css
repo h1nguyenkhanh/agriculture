@@ -1,6 +1,5 @@
 .sidebar-wrapper {
   background-color: #fff;
-  border-radius: 10px;
   padding: 15px;
   height: calc(100vh - 85px);
   position: fixed;
@@ -15,4 +14,24 @@
 }
 #sidebar-menu li {
   color: #555;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #fff; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }

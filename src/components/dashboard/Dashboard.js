@@ -1,20 +1,18 @@
-import { Layout, Row, Col } from "antd";
+import { Layout } from "antd";
 import "antd/dist/antd.css";
 import Head from "components/common/Head";
 import SideBar from "components/common/SideBar";
-import ProcessManage from "components/process/ProcessManage";
-import React, { useEffect, useState } from "react";
-import firebase from "firebase/config";
-import "./css/dashboard.css";
 import Provider from "components/context/Provider";
-import InsertStep from "components/process/ProcessStep";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Product from "components/product/Product";
+import firebase from "firebase/config";
+import React, { useEffect, useState } from "react";
+import "./css/dashboard.css";
 
 var db = firebase.firestore();
 
 export default function Dashboard() {
   const [productsData, setProductsData] = useState(null);
-  const [activeProcess, setActiveProcess] = useState(null);
+  const [activeProduct, setActiveProduct] = useState(null);
   const [isLoadingTable, setIsLoadingTable] = useState(true);
 
   useEffect(function () {
@@ -31,7 +29,7 @@ export default function Dashboard() {
         });
         setProductsData(responseData);
         setIsLoadingTable(false);
-        setActiveProcess(responseData[0]);
+        setActiveProduct(responseData[0].productList[0]);
       },
       (error) => {
         console.log("Loading data fail: " + error);
@@ -39,15 +37,15 @@ export default function Dashboard() {
     );
   }
 
-  function handleProcessClick(process) {
-    setActiveProcess(process);
+  function handleProductOnClick(product) {
+    setActiveProduct(product);
   }
 
   const providerProps = {
     productsData,
     setProductsData,
-    activeProcess,
-    setActiveProcess,
+    activeProduct,
+    setActiveProduct,
     isLoadingTable,
     setIsLoadingTable,
   };
@@ -59,19 +57,9 @@ export default function Dashboard() {
         <Layout className="content-layout">
           <SideBar
             productsData={productsData}
-            handleProcessClick={(process) => handleProcessClick(process)}
+            handleProductOnClick={(product) => handleProductOnClick(product)}
           />
-
-          {/* <Col xs={24} sm={24} md={19} xl={21} style={{ height: "100%" }}>
-              <Switch>
-                <Route path="/">
-                  <ProcessManage activeProcess={activeProcess} />
-                </Route>
-                <Route path="/step">
-                  <InsertStep />
-                </Route>
-              </Switch>
-            </Col> */}
+          <Product activeProduct={activeProduct}></Product>
         </Layout>
       </Layout>
     </Provider>
