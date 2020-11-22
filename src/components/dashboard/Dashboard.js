@@ -27,9 +27,11 @@ export default function Dashboard() {
           let data = { id: doc.id, ...doc.data() };
           responseData.push(data);
         });
-        setProductsData(responseData);
-        setIsLoadingTable(false);
-        setActiveProduct(responseData[0].productList[0]);
+        if (responseData.length > 0) {
+          setProductsData(responseData);
+          setIsLoadingTable(false);
+          setActiveProduct(responseData[0].productList[0]);
+        }
       },
       (error) => {
         console.log("Loading data fail: " + error);
