@@ -1,30 +1,32 @@
-import { Affix, Button, Layout, Menu, Input } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import firebase from "firebase/config";
-import {
-  AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
-
+import { AppstoreOutlined, PlusOutlined } from "@ant-design/icons";
+import { Input, Layout, Menu } from "antd";
 import "antd/dist/antd.css";
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Tools from "tools/Tools";
+import Context from "components/context/Context";
+import firebase from "firebase/config";
+import React, { useContext } from "react";
 import "./css/sidebar.css";
+
+
 var db = firebase.firestore();
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SideBar(props) {
-  const { productsData, handleProductOnClick } = props;
+  console.log('sidebar');
+  const {productsData,setActiveProduct, setActiveSubProducts} = useContext(Context);
+
+  function handleProductOnClick(product, subProducts) {
+    setActiveProduct(product);
+    setActiveSubProducts(subProducts);
+  }
 
   function renderProductList() {
     let count = 0;
     return (
       productsData &&
       productsData.map((item, index) => {
+        let subProduct = item
         return (
           <SubMenu
             key={`sub${++index}`}
@@ -33,7 +35,7 @@ export default function SideBar(props) {
           >
             {item.productList &&
               item.productList.map((item, index) => {
-                return <Menu.Item key={++count} onClick={() => handleProductOnClick(item)}>{item.name}</Menu.Item>;
+                return <Menu.Item key={++count} onClick={() => handleProductOnClick(item, subProduct)}>{item.name}</Menu.Item>;
               })}
           </SubMenu>
         );

@@ -3,7 +3,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import Context from "components/context/Context";
 
 function ProductDetail() {
-  const {productsData,setProductsData,activeProduct, activeSubProducts, updateProduct, editProcessContent, setEditProcessContent} = useContext(Context);
+  const {activeProduct, activeSubProducts, setEditProcessContent} = useContext(Context);
   
   if(activeProduct) {
     const productIndex = activeSubProducts.productList.indexOf(activeProduct)
@@ -12,7 +12,7 @@ function ProductDetail() {
 
   function handleEditorChange(content, editor) {
     setEditProcessContent(content)
-    console.log(content);
+
   }
 
   // updateProduct()
