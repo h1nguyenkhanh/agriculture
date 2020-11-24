@@ -1,19 +1,25 @@
-import MyEditor from "components/product/MyEditor";
-import { createEditorStateWithText } from "draft-js-plugins-editor";
-import createToolbarPlugin from "draft-js-static-toolbar-plugin";
-import "draft-js-static-toolbar-plugin/lib/plugin.css";
-import React from "react";
+import Context from "components/context/Context";
+import React, { useContext } from "react";
 import "./css/product.css";
-import TinyEditor from "./TinyEditor";
+import ProductDetail from "./ProductDetail";
+
 function Product(props) {
-  const { activeProduct } = props;
+  const {activeProduct, updateProduct, editProcessContent} = useContext(Context);
+
+  function handleClick() {
+    updateProduct({
+      ...activeProduct,
+      process: editProcessContent
+    })
+  }
+
   return (
     <div className="main-content">
       <h2>{activeProduct && activeProduct.name}</h2>
-        <TinyEditor/>
+      <button onClick={handleClick}>Lưu</button>
+      <ProductDetail />
     </div>
   );
 }
-
 
 export default Product;

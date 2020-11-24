@@ -4,16 +4,15 @@ var db = firebase.firestore();
 
 const ProductsApi = {};
 
-ProductsApi.getProductsList = (productName) => {
-  return db.collection("products")
-    .get()
-    .then(function (snapshot) {
-      snapshot.forEach(function (doc) {
-        console.log(doc.id, " => ", doc.data());
-      });
+ProductsApi.updateProduct = (parentId, productData) => {
+  db.collection("products")
+    .doc(parentId)
+    .update(productData)
+    .then(function () {
+      alert("Cập nhật quy trình cho sản phẩm thành công")
     })
     .catch(function (error) {
-      console.error("Lay du lieu that bai: ", error);
+      alert("Thất bại")
     });
 };
 
