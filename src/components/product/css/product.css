@@ -13,3 +13,30 @@
     position: relative;
     padding-top: 45px;
 }
+
+textarea {
+    height: 0;
+}
+
+.my_class {
+    background-color: red;
+}
+
+.hideEditorHeader .tox-editor-header {
+    display: none;
+}
+
+
+h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
+    display: block;
+    content: " ";
+    height: 90px;
+    margin-top: -90px;
+    visibility: hidden;
+}
+
+.toc-list {
+    list-style: none;
+    /* height: 30px; */
+}
+

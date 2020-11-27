@@ -52,7 +52,6 @@ export default function Dashboard() {
           let data = { id: doc.id, ...doc.data() };
           responseData.push(data);
         });
-        console.log(responseData);
         if (responseData.length > 0) {
           setActiveProduct(responseData[0].productList[0]);
         }

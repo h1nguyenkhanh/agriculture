@@ -2,18 +2,13 @@ import { AppstoreOutlined, PlusOutlined } from "@ant-design/icons";
 import { Input, Layout, Menu } from "antd";
 import "antd/dist/antd.css";
 import Context from "components/context/Context";
-import firebase from "firebase/config";
 import React, { useContext } from "react";
 import "./css/sidebar.css";
-
-
-var db = firebase.firestore();
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SideBar(props) {
-  console.log('sidebar');
   const {productsData,setActiveProduct, setActiveSubProducts} = useContext(Context);
 
   function handleProductOnClick(product, subProducts) {
