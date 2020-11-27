@@ -19,13 +19,13 @@ function Product(props) {
 
   return (
     <div className="main-content">
-      {/* {activeProduct && 
+      {activeProduct && 
         <>
           <h2>{activeProduct.name}</h2>
           <ProductDetail />
         </>
-      } */}
-      <MyTocbot/>
+      }
+      {/* <MyTocbot/> */}
     </div>
   );
 }
