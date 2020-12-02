@@ -30,7 +30,6 @@ function MyTocbot() {
  
         var markdown = turndownService.turndown('<h1><span style="font-size: 24pt;"><strong>321 mxvv ggg</strong><h2>s  </h2></span></h1><h1><span style="font-size: 24pt;"><strong>321 mxvv ggg</strong></span></h1>')
 
-
         marked.setOptions({
             headerIds: true
           });

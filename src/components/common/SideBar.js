@@ -39,7 +39,7 @@ export default function SideBar(props) {
   }
 
   return (
-    <Sider width={"250px"} className="site-layout-sider-light sidebar-wrapper">
+    <Sider width={"210px"} className="site-layout-sider-light sidebar-wrapper">
       <form onSubmit={() => console.log("oke")}>
         <Input
           placeholder="Thêm quy trình"

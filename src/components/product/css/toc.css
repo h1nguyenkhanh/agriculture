@@ -1,0 +1,6 @@
+.toc-wrapper {
+    position: fixed;
+    top: 150px;
+    right: 25px;
+    border: 1px solid #000;
+}

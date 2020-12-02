@@ -1,6 +1,9 @@
+import marked from "marked";
+import TurndownService from "turndown"
+
 let Tools = {};
 
-Tools.deleteMark = (str)=>{
+Tools.deleteVnMark = (str)=>{
     str = str.trim();
     str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
     str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
@@ -20,6 +23,29 @@ Tools.deleteMark = (str)=>{
     str = str.replace(/\s/g, '-');
     str = str.toLowerCase();
     return str;
+}
+
+Tools.markIdForHtml = (htmlContent)=>{
+    var turndownService = new TurndownService()
+    turndownService.keep(['span'])
+    turndownService.addRule('keepStyle', {
+        filter: (node) => {
+            let attributes = ['class', 'style', 'is'],
+                attrTest = attributes.some(attr => node.hasAttribute(attr)),
+                dataTest = Object.keys(node.dataset).length > 0;
+          
+            return attrTest || dataTest;
+          },
+          replacement: (innerHTML, node) => node.outerHTML
+      })
+
+    var markdown = turndownService.turndown(htmlContent)
+
+    marked.setOptions({
+        headerIds: true
+      });
+
+    return marked(markdown)
 }
 
 export default Tools;
