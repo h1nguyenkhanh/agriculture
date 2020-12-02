@@ -34,7 +34,7 @@ export default function Dashboard() {
           setProductsData(responseData);
           setIsLoadingTable(false);
           setActiveSubProducts(responseData[0]);
-          // setActiveProduct(responseData[0].productList[0]);
+          setActiveProduct(responseData[0].productList[0]);
         }
       },
       (error) => {
@@ -53,8 +53,10 @@ export default function Dashboard() {
           responseData.push(data);
         });
         if (responseData.length > 0) {
-          setActiveProduct(responseData[0].productList[0]);
-        }
+          setProductsData(responseData);
+          setIsLoadingTable(false);
+          setActiveSubProducts(responseData[0]);
+          setActiveProduct(responseData[0].productList[0]);        }
       })
       .catch(function (error) {
         console.error("Lay du lieu that bai: ", error);
@@ -80,7 +82,7 @@ export default function Dashboard() {
         <Head />
         <Layout className="content-layout">
           <SideBar />
-          <Product activeProduct={activeProduct}></Product>
+          {activeProduct && <Product activeProduct={activeProduct}></Product>}
         </Layout>
       </Layout>
     </Provider>

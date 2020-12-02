@@ -42,16 +42,17 @@ function MyTocbot() {
   return (
     <div>
       <h1>asdas</h1>
-            <div className="js-toc" style={{
+            <div style={{
                 position: "fixed",
                 width: '200px',
                 top: '50px',
                 right: '30px',
                 height: "auto",
-                background: "white",
                 zIndex: 100,
-                
-            }}></div>
+                overflow: 'hidden'               
+            }}>
+              <div  className="js-toc"></div>
+            </div>
 
       <div className="js-toc-content">
         <h1 id="1">Section 1</h1>

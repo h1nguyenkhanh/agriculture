@@ -8,7 +8,7 @@ const { Header } = Layout;
 
 export default function Head() {
   return (
-    <div style={{position: "fixed", width:"100%", height:"75px"}}>
+    <div style={{position: "fixed", width:"100%", height:"75px", zIndex: 2}}>
       <Header className="header">
         <Link className="logo-link" to="/">
           <img src="images/logo.png" alt="" className="logo-img" />
