@@ -26,8 +26,27 @@ Tools.deleteVnMark = (str)=>{
 }
 
 Tools.markIdForHtml = (htmlContent)=>{
-    var turndownService = new TurndownService()
-    turndownService.keep(['span'])
+    var turndownService = new TurndownService({
+        blankReplacement (content, node) {
+          const types = ['SCRIPT', 'IFRAME', 'DIV']
+          if (types.indexOf(node.nodeName) !== -1) {
+            return `\n\n${node.outerHTML}\n\n`
+          } else {
+            const output = []
+            node.childNodes.forEach((child) => {
+              if (types.indexOf(child.nodeName) !== -1) {
+                output.push(child.outerHTML)
+              }
+            })
+            if (output.length) {
+              return '\n\n' + output.join('\n\n') + '\n\n'
+            } else {
+              return node.isBlock ? '\n\n' : ''
+            }
+          }
+        }
+      })
+    turndownService.keep(['span', 'div'])
     turndownService.addRule('keepStyle', {
         filter: (node) => {
             let attributes = ['class', 'style', 'is'],

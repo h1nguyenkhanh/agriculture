@@ -4,8 +4,8 @@ import React, { useContext, useState, useEffect } from "react";
 import ProductsApi from "services/ProductsApi";
 import TableOfContent from "components/product/TableOfContent";
 import "./css/product.css";
-import Tools from "tools/Tools"
-import tocbot from 'tocbot';
+import Tools from "tools/Tools";
+import tocbot from "tocbot";
 
 function ProductDetail() {
   const {
@@ -19,7 +19,9 @@ function ProductDetail() {
   useEffect(() => {
     setReadOnlyMode(true);
     handleOnScrollEvent();
+    console.log(document.querySelector(".js-toc-body-content"));
     initToc()
+
   }, [activeProduct]);
 
   function toggleReadOnyMode() {
@@ -31,47 +33,50 @@ function ProductDetail() {
   }
 
   function initToc() {
+    console.log('done');
+    console.log(document.querySelector(".js-toc-body-content"));
     tocbot.init({
       // Where to render the table of contents.
-      tocSelector: '.js-toc',
+      tocSelector: ".js-toc",
       // Where to grab the headings to build the table of contents.
-      contentSelector: '.js-toc-content',
+      contentSelector: ".js-toc-body-content",
       // Which headings to grab inside of the contentSelector element.
       // headingSelector: 'h1, h2, h3',
       // For headings inside relative or absolute positioned containers within content.
       hasInnerContainers: true,
       collapseDepth: 6,
       orderedList: false,
-      listClass: 'toc-list',
-   });
+      listClass: "toc-list",
+    });
+    
+
   }
 
   function handleOnScrollEvent() {
-    
-    window.addEventListener("scroll", function (e) {
-      let isChange = true;
-      if (window.scrollY >= 80.80000305175781) {
-        document
-          .querySelector(".tox-tinymce")
-          .classList.remove("tox-tinymce--toolbar-sticky-off");
-        document
-          .querySelector(".tox-tinymce")
-          .classList.add("tox-tinymce--toolbar-sticky-on");
-        document.querySelector(".tox-editor-container").style.paddingTop =
-          "39px";
-        document.querySelector(".tox-editor-header").style.cssText =
-          "position: fixed; left: 276px; top: 0px; width: calc(100vw - 365px);";
-      } else {
-        document
-          .querySelector(".tox-tinymce")
-          .classList.remove("tox-tinymce--toolbar-sticky-on");
-        document
-          .querySelector(".tox-tinymce")
-          .classList.add("tox-tinymce--toolbar-sticky-off");
-        document.querySelector(".tox-editor-container").style.paddingTop = "0";
-        document.querySelector(".tox-editor-header").style.cssText = "";
-      }
-    });
+    // window.addEventListener("scroll", function (e) {
+    //   let isChange = true;
+    //   if (window.scrollY >= 80.80000305175781) {
+    //     document
+    //       .querySelector(".tox-tinymce")
+    //       .classList.remove("tox-tinymce--toolbar-sticky-off");
+    //     document
+    //       .querySelector(".tox-tinymce")
+    //       .classList.add("tox-tinymce--toolbar-sticky-on");
+    //     document.querySelector(".tox-editor-container").style.paddingTop =
+    //       "39px";
+    //     document.querySelector(".tox-editor-header").style.cssText =
+    //       "position: fixed; left: 276px; top: 0px; width: calc(100vw - 365px);";
+    //   } else {
+    //     document
+    //       .querySelector(".tox-tinymce")
+    //       .classList.remove("tox-tinymce--toolbar-sticky-on");
+    //     document
+    //       .querySelector(".tox-tinymce")
+    //       .classList.add("tox-tinymce--toolbar-sticky-off");
+    //     document.querySelector(".tox-editor-container").style.paddingTop = "0";
+    //     document.querySelector(".tox-editor-header").style.cssText = "";
+    //   }
+    // });
   }
 
   /**
@@ -92,6 +97,7 @@ function ProductDetail() {
       });
       // Cập nhật dữ liệu lên server
       ProductsApi.updateProduct(activeSubProducts.id, newData);
+      tocbot.refresh()
     }
   }
 
@@ -104,29 +110,30 @@ function ProductDetail() {
         </button>
         <button onClick={updateProduct}>Lưu</button>
       </div>
-      <div style={{
-                position: "fixed",
-                width: '200px',
-                top: '50px',
-                right: '30px',
-                height: "auto",
-                zIndex: 100,
-                overflow: 'hidden'               
-            }}>
-        <div className="js-toc"></div>
+      <div
+        style={{
+          position: "fixed",
+          width: "200px",
+          top: "50px",
+          right: "30px",
+          height: "auto",
+          zIndex: 99999999999,
+          overflow: "hidden",
+        }}
+      >
+        <div className="js-toc">sS</div>
       </div>
-      {/* <div className="js-toc-content">
-            <h1>adsad</h1>
-      </div> */}
-      <div className="my-editor-wrapper js-toc-content">
+      <div className="my-editor-wrapper">
+      <div className="js-toc-body-content" dangerouslySetInnerHTML={{ __html: Tools.markIdForHtml(activeProduct.process)}} style={{}}>
+      </div>
         <div className={readOnlyMode ? "hideEditorHeader" : ""}>
           <Editor
             apiKey="ybsyhu4bcrzgwir4lhlmqffti3np06827pv3wht6ulg9ebed"
-            value={Tools.markIdForHtml(activeProduct.process)}
+            value={activeProduct.process}
             disabled={readOnlyMode}
             init={{
               selector: "textarea#readonly-demo",
-              body_class: "js-toc-content",
+              body_class: "",
               toolbar_sticky: true,
               min_height: 500,
               menubar: false,
