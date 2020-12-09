@@ -3,20 +3,17 @@ import "./css/toc.css";
 
 function TableOfContent() {
   return (
-    <div className="toc-wrapper">
       <div style={{
                 position: "fixed",
-                width: '200px',
-                top: '50px',
-                right: '30px',
+                width: "200px",
+                top: "50px",
+                right: "30px",
                 height: "auto",
-                zIndex: 100,
-                overflow: 'hidden'               
+                zIndex: 99999999999,
+                overflow: "hidden",              
             }}>
         <div className="js-toc"></div>
       </div>
-      <p>hii</p>
-    </div>
   );
 }
 

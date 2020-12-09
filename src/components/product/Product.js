@@ -15,13 +15,13 @@ function ProductDetail() {
     editProcessContent,
   } = useContext(Context);
   const [readOnlyMode, setReadOnlyMode] = useState(true);
+  const [contentHtml, setContentHtml] = useState("");
 
   useEffect(() => {
     setReadOnlyMode(true);
     handleOnScrollEvent();
     console.log(document.querySelector(".js-toc-body-content"));
-    initToc()
-
+    console.log(Tools.markIdForHtml(activeProduct.process));
   }, [activeProduct]);
 
   function toggleReadOnyMode() {
@@ -33,7 +33,7 @@ function ProductDetail() {
   }
 
   function initToc() {
-    console.log('done');
+    console.log("done");
     console.log(document.querySelector(".js-toc-body-content"));
     tocbot.init({
       // Where to render the table of contents.
@@ -48,35 +48,47 @@ function ProductDetail() {
       orderedList: false,
       listClass: "toc-list",
     });
-    
-
   }
 
   function handleOnScrollEvent() {
-    // window.addEventListener("scroll", function (e) {
-    //   let isChange = true;
-    //   if (window.scrollY >= 80.80000305175781) {
-    //     document
-    //       .querySelector(".tox-tinymce")
-    //       .classList.remove("tox-tinymce--toolbar-sticky-off");
-    //     document
-    //       .querySelector(".tox-tinymce")
-    //       .classList.add("tox-tinymce--toolbar-sticky-on");
-    //     document.querySelector(".tox-editor-container").style.paddingTop =
-    //       "39px";
-    //     document.querySelector(".tox-editor-header").style.cssText =
-    //       "position: fixed; left: 276px; top: 0px; width: calc(100vw - 365px);";
-    //   } else {
-    //     document
-    //       .querySelector(".tox-tinymce")
-    //       .classList.remove("tox-tinymce--toolbar-sticky-on");
-    //     document
-    //       .querySelector(".tox-tinymce")
-    //       .classList.add("tox-tinymce--toolbar-sticky-off");
-    //     document.querySelector(".tox-editor-container").style.paddingTop = "0";
-    //     document.querySelector(".tox-editor-header").style.cssText = "";
-    //   }
-    // });
+    window.addEventListener("scroll", function (e) {
+      if (!document.querySelector(".tox-tinymce") && readOnlyMode) {
+        return;
+      }
+      let parrentWidth = document.querySelector(".tox-tinymce").offsetWidth - 2;
+      if (window.scrollY >= 80) {
+        document
+          .querySelector(".tox-tinymce")
+          .classList.remove("tox-tinymce--toolbar-sticky-off");
+        document
+          .querySelector(".tox-tinymce")
+          .classList.add("tox-tinymce--toolbar-sticky-on");
+        document
+          .querySelector(".tox-editor-container")
+          .classList.add("tox-container-padding");
+        document.querySelector(
+          ".tox-editor-header"
+        ).style.cssText = `position: fixed; left: 236px; top: 0px; width: ${parrentWidth}px`;
+      } else {
+        document
+          .querySelector(".tox-tinymce")
+          .classList.remove("tox-tinymce--toolbar-sticky-on");
+        document
+          .querySelector(".tox-tinymce")
+          .classList.add("tox-tinymce--toolbar-sticky-off");
+        document
+          .querySelector(".tox-editor-container")
+          .classList.remove("tox-container-padding");
+        document.querySelector(".tox-editor-header").style.cssText = "";
+        console.log(2);
+      }
+    });
+  }
+
+  function onEditerRender() {
+    let currentHtml = document.querySelector("iframe").contentDocument.body.innerHTML;
+    setContentHtml(currentHtml)
+    initToc();
   }
 
   /**
@@ -97,35 +109,50 @@ function ProductDetail() {
       });
       // Cập nhật dữ liệu lên server
       ProductsApi.updateProduct(activeSubProducts.id, newData);
-      tocbot.refresh()
+      tocbot.refresh();
     }
   }
 
   return (
     <div className="main-content">
       <h2>{activeProduct.name}</h2>
-      <div className="">
+      <div className="wrapper-option">
         <button onClick={toggleReadOnyMode}>
           Chế độ {readOnlyMode ? "sửa" : "đọc"}
+        </button>
+        <button
+          onClick={() => {
+            tocbot.refresh();
+          }}
+        >
+          tocbot.refresh();
         </button>
         <button onClick={updateProduct}>Lưu</button>
       </div>
       <div
         style={{
           position: "fixed",
-          width: "200px",
-          top: "50px",
-          right: "30px",
+          width: "150px",
+          top: "180px",
+          right: "25px",
           height: "auto",
-          zIndex: 99999999999,
+          zIndex: 9999999,
           overflow: "hidden",
+          border: "2px solid #eee",
+          borderLeft: "0px"
         }}
       >
-        <div className="js-toc">sS</div>
+        <div className="js-toc"></div>
       </div>
+      {/* <TableOfContent/> */}
+      <div
+        className="js-toc-body-content"
+        dangerouslySetInnerHTML={{
+          __html: Tools.markIdForHtml(contentHtml),
+        }}
+        style={{}}
+      ></div>
       <div className="my-editor-wrapper">
-      <div className="js-toc-body-content" dangerouslySetInnerHTML={{ __html: Tools.markIdForHtml(activeProduct.process)}} style={{}}>
-      </div>
         <div className={readOnlyMode ? "hideEditorHeader" : ""}>
           <Editor
             apiKey="ybsyhu4bcrzgwir4lhlmqffti3np06827pv3wht6ulg9ebed"
@@ -150,6 +177,7 @@ function ProductDetail() {
               ],
               toolbar:
                 "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl",
+              init_instance_callback: onEditerRender,
               setup: function (editor) {
                 editor.ui.registry.addContextToolbar("imagealignment", {
                   predicate: function (node) {
