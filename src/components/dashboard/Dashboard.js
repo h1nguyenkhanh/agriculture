@@ -3,7 +3,7 @@ import "antd/dist/antd.css";
 import Head from "components/common/Head";
 import SideBar from "components/common/SideBar";
 import Provider from "components/context/Provider";
-import Product from "components/product/Product";
+import Product from "components/product/Product2";
 import firebase from "firebase/config";
 import React, { useEffect, useState } from "react";
 import "./css/dashboard.css";
@@ -12,10 +12,10 @@ var db = firebase.firestore();
 
 export default function Dashboard() {
   const [productsData, setProductsData] = useState(null);
-  const [activeSubProducts, setActiveSubProducts] = useState(null);
   const [activeProduct, setActiveProduct] = useState(null);
-  const [isLoadingTable, setIsLoadingTable] = useState(true);
-  const [editProcessContent, setEditProcessContent] = useState("");
+  // const [activeSubProducts, setActiveSubProducts] = useState(null);
+  // const [isLoadingTable, setIsLoadingTable] = useState(true);
+  // const [editProcessContent, setEditProcessContent] = useState("");
 
   useEffect(function () {
     listenProductsData();
@@ -32,9 +32,6 @@ export default function Dashboard() {
         });
         if (responseData.length > 0) {
           setProductsData(responseData);
-          setIsLoadingTable(false);
-          setActiveSubProducts(responseData[0]);
-          setActiveProduct(responseData[0].productList[0]);
         }
       },
       (error) => {
@@ -53,10 +50,16 @@ export default function Dashboard() {
           responseData.push(data);
         });
         if (responseData.length > 0) {
-          setProductsData(responseData);
-          setIsLoadingTable(false);
-          setActiveSubProducts(responseData[0]);
-          setActiveProduct(responseData[0].productList[0]);        }
+          const firstActiveProduct = {
+            ...responseData[0].items[0],
+            parentId: responseData[0].id,
+          };
+
+          // setProductsData(responseData);
+          // setIsLoadingTable(false);
+          // setActiveSubProducts(responseData[0]);
+          setActiveProduct(firstActiveProduct);
+        }
       })
       .catch(function (error) {
         console.error("Lay du lieu that bai: ", error);
@@ -66,14 +69,14 @@ export default function Dashboard() {
   const providerProps = {
     productsData,
     setProductsData,
-    activeSubProducts,
-    setActiveSubProducts,
+    // activeSubProducts,
+    // setActiveSubProducts,
     activeProduct,
     setActiveProduct,
-    isLoadingTable,
-    setIsLoadingTable,
-    editProcessContent,
-    setEditProcessContent,
+    // isLoadingTable,
+    // setIsLoadingTable,
+    // editProcessContent,
+    // setEditProcessContent,
   };
 
   return (
@@ -83,6 +86,7 @@ export default function Dashboard() {
         <Layout className="content-layout">
           <SideBar />
           {activeProduct && <Product activeProduct={activeProduct}></Product>}
+          {/* <Test /> */}
         </Layout>
       </Layout>
     </Provider>

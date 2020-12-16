@@ -28,7 +28,7 @@ Tools.deleteVnMark = (str)=>{
 Tools.markIdForHtml = (htmlContent)=>{
     var turndownService = new TurndownService({
         blankReplacement (content, node) {
-          const types = ['SCRIPT', 'IFRAME', 'DIV']
+          const types = ['SCRIPT', 'IFRAME', 'DIV', 'P']
           if (types.indexOf(node.nodeName) !== -1) {
             return `\n\n${node.outerHTML}\n\n`
           } else {
@@ -63,7 +63,6 @@ Tools.markIdForHtml = (htmlContent)=>{
     marked.setOptions({
         headerIds: true
       });
-
     return marked(markdown)
 }
 

@@ -6,6 +6,8 @@ import TableOfContent from "components/product/TableOfContent";
 import "./css/product.css";
 import Tools from "tools/Tools";
 import tocbot from "tocbot";
+import Test from "components/Test"
+
 
 function ProductDetail() {
   const {
@@ -33,8 +35,6 @@ function ProductDetail() {
   }
 
   function initToc() {
-    console.log("done");
-    console.log(document.querySelector(".js-toc-body-content"));
     tocbot.init({
       // Where to render the table of contents.
       tocSelector: ".js-toc",
@@ -80,7 +80,6 @@ function ProductDetail() {
           .querySelector(".tox-editor-container")
           .classList.remove("tox-container-padding");
         document.querySelector(".tox-editor-header").style.cssText = "";
-        console.log(2);
       }
     });
   }
@@ -109,6 +108,8 @@ function ProductDetail() {
       });
       // Cập nhật dữ liệu lên server
       ProductsApi.updateProduct(activeSubProducts.id, newData);
+      let currentHtml = document.querySelector("iframe").contentDocument.body.innerHTML;
+      setContentHtml(currentHtml)
       tocbot.refresh();
     }
   }
@@ -116,7 +117,9 @@ function ProductDetail() {
   return (
     <div className="main-content">
       <h2>{activeProduct.name}</h2>
-      <div className="wrapper-option">
+      <Test></Test>
+      
+       <div className="wrapper-option">
         <button onClick={toggleReadOnyMode}>
           Chế độ {readOnlyMode ? "sửa" : "đọc"}
         </button>
@@ -144,7 +147,8 @@ function ProductDetail() {
       >
         <div className="js-toc"></div>
       </div>
-      {/* <TableOfContent/> */}
+      <TableOfContent/>
+
       <div
         className="js-toc-body-content"
         dangerouslySetInnerHTML={{
@@ -203,6 +207,7 @@ function ProductDetail() {
         </div>
       </div>
       <TableOfContent />
+       */}
     </div>
   );
 }

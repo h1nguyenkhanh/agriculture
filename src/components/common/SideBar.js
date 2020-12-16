@@ -9,29 +9,34 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SideBar(props) {
-  const {productsData,setActiveProduct, setActiveSubProducts} = useContext(Context);
+  const {productsData, setActiveProduct} = useContext(Context);
 
-  function handleProductOnClick(product, subProducts) {
-    setActiveProduct(product);
-    setActiveSubProducts(subProducts);
+  function handleProductOnClick(productItem, productParent) {
+    setActiveProduct({
+      ...productItem,
+      parentId: productParent.id
+    });
   }
 
   function renderProductList() {
-    let count = 0;
+    let countIndex = 0;
     return (
       productsData &&
-      productsData.map((item, index) => {
-        let subProduct = item
+      productsData.map((product, productIndex) => {
         return (
           <SubMenu
-            key={`sub${++index}`}
+            key={`sub${++productIndex}`}
             icon={<AppstoreOutlined />}
-            title={item.name}
+            title={product.name}
           >
-            {item.productList &&
-              item.productList.map((item, index) => {
-                return <Menu.Item key={++count} onClick={() => handleProductOnClick(item, subProduct)}>{item.name}</Menu.Item>;
-              })}
+            {
+              product.items &&
+              product.items.map((item, itemIndex) => {
+                return <Menu.Item key={`${++countIndex}`} onClick={
+                  () => handleProductOnClick(item, product)
+                }>{item.name}</Menu.Item>;
+              })
+            }
           </SubMenu>
         );
       })

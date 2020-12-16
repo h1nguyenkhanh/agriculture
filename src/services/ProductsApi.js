@@ -9,10 +9,10 @@ ProductsApi.updateProduct = (parentId, productData) => {
     .doc(parentId)
     .update(productData)
     .then(function () {
-      alert("Cập nhật quy trình cho sản phẩm thành công")
+      // alert("Cập nhật quy trình cho sản phẩm thành công")
     })
     .catch(function (error) {
-      alert("hất bại")
+      // alert("hất bại")
     });
 };
 
