@@ -6,7 +6,7 @@ import { Button, Tooltip } from 'antd';
 import { CloseOutlined, SaveOutlined  } from '@ant-design/icons';
 import moment from 'moment';
 import Tools from "tools/Tools";
-import "./css/process.css";
+import "./css/step.css";
 
 const editorConfiguration = {
   toolbar: {
@@ -73,14 +73,11 @@ const editorConfiguration = {
 };
 
 function Step(props) {
-  let { itemData, deleteStep, updateStep } = props;
+  let { itemData, deleteStep, updateStep, unique } = props;
   let [currentData, setCurrentData] = useState(Tools.cloneObject(itemData));
-  let [stepTime, setStepTime] = useState([...itemData.stepTime]) 
-  
+ 
   useEffect(() => {
-    setCurrentData(Tools.cloneObject(itemData))   
-    // console.log(itemData.id,itemData.stepTime);
-    // console.log(currentData);
+    setCurrentData(Tools.cloneObject(itemData))
   }, [itemData]);
 
   function onClickUpdate() {
@@ -114,21 +111,20 @@ function Step(props) {
   
   return (
     <div className="step-wrapper">
-      <h2>{itemData.id}</h2>
-      <h2>{stepTime[0]}</h2>
       <div className="step-header">
-        <h3>{itemData.index}</h3>
+        <h3 id={unique}>Bước {itemData.index}</h3>
         <div>
         <Button shape='circle' danger type="primary" icon={<CloseOutlined />} onClick={()=>deleteStep(itemData.id)}></Button>
         {
-        itemData.stepTitle !== currentData.stepTitle
-        ||
-        itemData.stepContent !== currentData.stepContent
-        ||
-        JSON.stringify(itemData.stepTime) !== JSON.stringify(currentData.stepTime)
-        ?
-        <Button shape='circle' type="primary" icon={<SaveOutlined />} onClick={onClickUpdate}  style={{marginLeft: '5px'}}></Button>
-        :false
+              itemData.stepTitle !== currentData.stepTitle
+            ||
+            itemData.stepContent !== currentData.stepContent
+            ||
+            JSON.stringify(itemData.stepTime) !== JSON.stringify(currentData.stepTime)
+            ?
+            <Button shape='circle' type="primary" icon={<SaveOutlined />} onClick={onClickUpdate}  style={{marginLeft: '5px'}}></Button>
+            :false
+          
         }
         </div>
       </div>
@@ -148,15 +144,16 @@ function Step(props) {
       <Divider className="custom-divider" />
       <div className="step-time">
         <p>Trời gian</p>
-        <DatePicker.RangePicker
+          <DatePicker.RangePicker
           placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
           onChange={onDatePickerChange}
           defaultValue={[
-            moment(stepTime[0]),
-            moment(stepTime[1])
+            moment(itemData.stepTime[0]),
+            moment(itemData.stepTime[1])
           ]}
           // defaultValue={}
         />
+        
       </div>
       <Divider className="custom-divider" />
       <div className="step-content">
@@ -176,4 +173,4 @@ function Step(props) {
   );
 }
 
-export default React.memo(Step);
+export default Step;
