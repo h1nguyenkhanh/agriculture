@@ -3,8 +3,9 @@ import Editor from "ckeditor5-custom-build/build/ckeditor";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { DatePicker, Divider } from "antd";
 import { Button, Tooltip } from 'antd';
-import { CloseOutlined  } from '@ant-design/icons';
-
+import { CloseOutlined, SaveOutlined  } from '@ant-design/icons';
+import moment from 'moment';
+import Tools from "tools/Tools";
 import "./css/process.css";
 
 const editorConfiguration = {
@@ -73,25 +74,63 @@ const editorConfiguration = {
 
 function Step(props) {
   let { itemData, deleteStep, updateStep } = props;
-  let [renderComponent, setRenderComponent] = useState(null);
+  let [currentData, setCurrentData] = useState(Tools.cloneObject(itemData));
+  let [stepTime, setStepTime] = useState([...itemData.stepTime]) 
   
   useEffect(() => {
+    setCurrentData(Tools.cloneObject(itemData))   
+    // console.log(itemData.id,itemData.stepTime);
+    // console.log(currentData);
+  }, [itemData]);
 
-    console.log('done');
-  }, []);
+  function onClickUpdate() {
+    updateStep(itemData.id, currentData)
+  }
 
-  function headerEditorOnBlur(event, editor) {}
-  function contentEditorOnBlur(event, editor) {}
+  function titleEditorOnBlur(event, editor) {
+    let editData = {...currentData, stepTitle: editor.getData()};
+    if(currentData.stepTitle!==editData.stepTitle) {
+      setCurrentData(editData)
+    }
+  }
+
+
+  function contentEditorOnBlur(event, editor) {
+    let editData = {...currentData, stepContent: editor.getData()};
+    if(currentData.stepContent!==editData.stepContent) {
+      setCurrentData(editData)
+    }
+  }
+
   function editorOnReady(editor) {}
   function onDatePickerChange(value, dateString) {
-    console.log(value);
-    console.log(dateString);
+    let editData = {...currentData, stepTime: dateString};
+    if(currentData.stepTime!==editData.stepTime) {
+      setCurrentData(editData)
+    }
   }
+
+  // console.log(itemData.stepTime);
+  
   return (
     <div className="step-wrapper">
+      <h2>{itemData.id}</h2>
+      <h2>{stepTime[0]}</h2>
       <div className="step-header">
         <h3>{itemData.index}</h3>
+        <div>
         <Button shape='circle' danger type="primary" icon={<CloseOutlined />} onClick={()=>deleteStep(itemData.id)}></Button>
+        {
+        itemData.stepTitle !== currentData.stepTitle
+        ||
+        itemData.stepContent !== currentData.stepContent
+        ||
+        JSON.stringify(itemData.stepTime) !== JSON.stringify(currentData.stepTime)
+        ?
+        <Button shape='circle' type="primary" icon={<SaveOutlined />} onClick={onClickUpdate}  style={{marginLeft: '5px'}}></Button>
+        :false
+        }
+        </div>
       </div>
       <div className="step-title">
         <CKEditor
@@ -100,7 +139,7 @@ function Step(props) {
           data={itemData.stepTitle}
           // onReady={editorOnReady}
           // onChange={headerEditorOnChange}
-          // onBlur={headerEditorOnBlur}
+          onBlur={titleEditorOnBlur}
           onFocus={(event, editor) => {
             // console.log("Focus.", editor);
           }}
@@ -112,6 +151,11 @@ function Step(props) {
         <DatePicker.RangePicker
           placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
           onChange={onDatePickerChange}
+          defaultValue={[
+            moment(stepTime[0]),
+            moment(stepTime[1])
+          ]}
+          // defaultValue={}
         />
       </div>
       <Divider className="custom-divider" />
@@ -122,7 +166,7 @@ function Step(props) {
           data={itemData.stepContent}
           // onReady={editorOnReady}
           // onChange={headerEditorOnChange}
-          // onBlur={headerEditorOnBlur}
+          onBlur={contentEditorOnBlur}
           onFocus={(event, editor) => {
             // console.log("Focus.", editor);
           }}
@@ -132,4 +176,4 @@ function Step(props) {
   );
 }
 
-export default Step;
+export default React.memo(Step);

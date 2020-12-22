@@ -9,12 +9,14 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function SideBar(props) {
-  const {productsData, setActiveProduct} = useContext(Context);
+  const { productsData, setActiveProduct } = useContext(Context);
+
+  console.log(productsData);
 
   function handleProductOnClick(productItem, productParent) {
     setActiveProduct({
       ...productItem,
-      parentId: productParent.id
+      parentId: productParent.id,
     });
   }
 
@@ -29,14 +31,17 @@ export default function SideBar(props) {
             icon={<AppstoreOutlined />}
             title={product.name}
           >
-            {
-              product.items &&
+            {product.items &&
               product.items.map((item, itemIndex) => {
-                return <Menu.Item key={`${++countIndex}`} onClick={
-                  () => handleProductOnClick(item, product)
-                }>{item.name}</Menu.Item>;
-              })
-            }
+                return (
+                  <Menu.Item
+                    key={`${++countIndex}`}
+                    onClick={() => handleProductOnClick(item, product)}
+                  >
+                    {item.name}
+                  </Menu.Item>
+                );
+              })}
           </SubMenu>
         );
       })
@@ -57,8 +62,8 @@ export default function SideBar(props) {
         />
       </form>
       <Menu
-        defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
+        defaultSelectedKeys={["1"]}
+        defaultOpenKeys={["sub1"]}
         mode="inline"
       >
         {renderProductList()}

@@ -1,3 +1,4 @@
+import { ToolOutlined } from "@ant-design/icons";
 import marked from "marked";
 import TurndownService from "turndown"
 
@@ -64,6 +65,34 @@ Tools.markIdForHtml = (htmlContent)=>{
         headerIds: true
       });
     return marked(markdown)
+}
+
+Tools.cloneObject = (obj) => {
+  if (null == obj || "object" != typeof obj) return obj;
+  var copy = obj.constructor();
+  for (var attr in obj) {
+      if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+  }
+  return copy;
+}
+
+Tools.getNewIdCode = (arr, str) => {
+  if(arr.length===0) {
+    return str+"0001"
+  }
+  function getNumber(str) {
+    return str.match(/\d+/g).map(Number)[0];
+  }
+  let maxValue = arr.reduce((a,b)=>{
+    console.log(a,b);
+    if(getNumber(a.id)>getNumber(b.id)) return a;
+    return b;
+  })
+  let result = getNumber(maxValue.id);
+  result = ("000" + ++result).slice(-4)
+
+  console.log(result);
+  return str+result
 }
 
 export default Tools;
