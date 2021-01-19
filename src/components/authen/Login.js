@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 
 function Login() {
     return (
-        <>
-         <h1>Login</h1>
-         <Link to="dashboard">Dashboard</Link>
-        </>
+        <div className="authen-container">
+             <h1>Login</h1>
+         <Link to="dashboard">Đăng nhập</Link>
+        
+        </div>
     )
 }
 

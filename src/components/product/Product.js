@@ -1,6 +1,13 @@
 import Context from "components/context/Context";
 import firebase from "firebase/config";
 import React, { useContext, useEffect, useState } from "react";
+import {
+  AppstoreOutlined,
+  PlusOutlined,
+  CloseOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Button } from "antd";
 import tocbot from "tocbot";
 import Tools from "tools/Tools";
 import "./css/product.css";
@@ -65,11 +72,10 @@ const editorConfiguration = {
 };
 
 function Product() {
-  const { activeProduct, setActiveProduct } = useContext(Context);
+  const { activeProduct, productsData, setProductsData, setActiveProduct } = useContext(Context);
 
   const [stepsData, setStepsData] = useState([]);
 
-  console.log(stepsData);
   useEffect(() => {
     getProcessSteps();
   }, [activeProduct]);
@@ -141,6 +147,33 @@ function Product() {
       });
   }
 
+  function deleteProduct() {
+    console.log(activeProduct);
+    console.log(productsData);
+    let category = productsData.find(element => element.id === activeProduct.parentId)
+    const index = productsData.indexOf(category)
+    console.log(category);
+    // var newProductsData = productsData.splice(index, 1, 'drum');
+
+
+    // console.log(`products/${activeProduct.parentId}/itemProcess/${activeProduct.id}`);
+    // console.log(`products/cam/itemProcess`);
+    // // let cf = window.confirm("Bạn có chắc chắn muốn xóa quy trình này không?");
+    // // if (!cf) return;
+    // db.collection(`products/${activeProduct.parentId}/itemProcess/`)
+    // .doc(activeProduct.id)
+    // .delete()
+    // .then(function() {
+    //     console.log("Xoa du lieu thanh cong");
+    // })
+    // .catch(function(error) {
+    //     console.error("Xoa du lieu that bai: ", error);
+    // });
+    
+
+   
+  }
+
   function initToc() {
     tocbot.init({
       // Where to render the table of contents.
@@ -162,20 +195,17 @@ function Product() {
     <div className="main-content">
       <h2>{activeProduct.name}</h2>
       <div className="wrapper-option">
-        <button
-          onClick={() => {
-            addNewStep();
-          }}
-        >
+        <Button onClick={addNewStep} type="primary" icon={<PlusOutlined />}>
           Thêm công đoạn
-        </button>
-        <button
-          onClick={() => {
-            initToc();
-          }}
+        </Button>
+        <Button
+          onClick={deleteProduct}
+          type="danger"
+          icon={<CloseOutlined />}
+          style={{ marginLeft: "10px" }}
         >
-          toc
-        </button>
+          Xóa quy trình
+        </Button>
       </div>
 
       <div className="wrapper-step">

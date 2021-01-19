@@ -19,6 +19,9 @@ export default function Dashboard() {
     getFirstProduct();
   }, []);
 
+  
+
+
   function listenProductsData() {
     db.collection("products").onSnapshot(
       (snapshot) => {
@@ -51,7 +54,7 @@ export default function Dashboard() {
             ...responseData[0].items[0],
             parentId: responseData[0].id,
           };
-          setActiveProduct(firstActiveProduct);
+          setActiveProduct(firstActiveProduct);       
         }
       })
       .catch(function (error) {
@@ -65,15 +68,14 @@ export default function Dashboard() {
     activeProduct,
     setActiveProduct,
   };
-
+  console.log(activeProduct);
   return (
     <Provider value={providerProps}>
       <Layout className="main-layout">
         <Head />
         <Layout className="content-layout">
-          <SideBar />
-          {activeProduct && <Product activeProduct={activeProduct}></Product>}
-          {/* <Test /> */}
+          <SideBar/>
+          {activeProduct && (activeProduct.id && <Product></Product>)}
         </Layout>
       </Layout>
     </Provider>

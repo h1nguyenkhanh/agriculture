@@ -16,6 +16,25 @@
   color: #555;
 }
 
+.category-button {
+  margin-left: 48px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-input {
+
+  margin-right: 16px;
+  display: flex
+}
+
+.product-input form {
+  display: flex
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
