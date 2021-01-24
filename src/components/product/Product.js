@@ -72,7 +72,13 @@ const editorConfiguration = {
 };
 
 function Product() {
-  const { activeProduct, productsData, setProductsData, setActiveProduct } = useContext(Context);
+  const {
+    activeProduct,
+    productsData,
+    setProductsData,
+    setActiveProduct,
+    getFirstProduct,
+  } = useContext(Context);
 
   const [stepsData, setStepsData] = useState([]);
 
@@ -85,6 +91,7 @@ function Product() {
   }, [stepsData]);
 
   function getProcessSteps() {
+    if(!activeProduct) return;
     db.collection(
       `products/${activeProduct.parentId}/itemProcess/${activeProduct.id}/steps`
     )
@@ -148,30 +155,48 @@ function Product() {
   }
 
   function deleteProduct() {
-    console.log(activeProduct);
-    console.log(productsData);
-    let category = productsData.find(element => element.id === activeProduct.parentId)
-    const index = productsData.indexOf(category)
-    console.log(category);
-    // var newProductsData = productsData.splice(index, 1, 'drum');
+    function deleteCategory() {
+      //Lấy danh mục con (qua-buoi) trong danh mục các sản phẩm
+      let productChild = productsData.find(
+        (element) => element.id === activeProduct.parentId
+      );
 
+      //Lấy vị trí danh mục con (qua-buoi) trong danh mục các sản phẩm (vị trí của danh mục bưởi)
+      const productIndex = productsData.indexOf(productChild);
 
-    // console.log(`products/${activeProduct.parentId}/itemProcess/${activeProduct.id}`);
-    // console.log(`products/cam/itemProcess`);
-    // // let cf = window.confirm("Bạn có chắc chắn muốn xóa quy trình này không?");
-    // // if (!cf) return;
-    // db.collection(`products/${activeProduct.parentId}/itemProcess/`)
-    // .doc(activeProduct.id)
-    // .delete()
-    // .then(function() {
-    //     console.log("Xoa du lieu thanh cong");
-    // })
-    // .catch(function(error) {
-    //     console.error("Xoa du lieu that bai: ", error);
-    // });
-    
+      //Lấy vị trí sản phẩm trong danh mục con (bưởi diễn trong qua bưởi)
+      let productChildIndex = productChild.items.findIndex((item) => {
+        return item.id === activeProduct.id;
+      });
 
-   
+      //Xóa vị trí của sản phẩm trong danh mục
+      productChild.items.splice(productChildIndex, 1);
+
+      //Cập nhật csdl
+      db.collection(`products`)
+        .doc(activeProduct.parentId)
+        .update({
+          items: productChild.items,
+        })
+        .then(function () {
+          setActiveProduct({});
+          console.log("Xoa du lieu thanh cong");
+        })
+        .catch(function (error) {
+          console.error("Xoa du lieu that bai: ", error);
+        });
+    }
+
+    db.collection(`products/${activeProduct.parentId}/itemProcess/`)
+      .doc(activeProduct.id)
+      .delete()
+      .then(function () {
+        deleteCategory();
+        console.log("Xoa du lieu thanh cong");
+      })
+      .catch(function (error) {
+        console.error("Xoa du lieu that bai: ", error);
+      });
   }
 
   function initToc() {
@@ -193,42 +218,46 @@ function Product() {
 
   return (
     <div className="main-content">
-      <h2>{activeProduct.name}</h2>
-      <div className="wrapper-option">
-        <Button onClick={addNewStep} type="primary" icon={<PlusOutlined />}>
-          Thêm công đoạn
-        </Button>
-        <Button
-          onClick={deleteProduct}
-          type="danger"
-          icon={<CloseOutlined />}
-          style={{ marginLeft: "10px" }}
-        >
-          Xóa quy trình
-        </Button>
-      </div>
+      {activeProduct && activeProduct.id && (
+        <div>
+          <h2>{activeProduct.name}</h2>
+          <div className="wrapper-option">
+            <Button onClick={addNewStep} type="primary" icon={<PlusOutlined />}>
+              Thêm công đoạn
+            </Button>
+            <Button
+              onClick={deleteProduct}
+              type="danger"
+              icon={<CloseOutlined />}
+              style={{ marginLeft: "10px" }}
+            >
+              Xóa quy trình
+            </Button>
+          </div>
 
-      <div className="wrapper-step">
-        <div className="main-step js-toc-body-content">
-          {stepsData &&
-            stepsData.map((item, index) => {
-              return (
-                <Step
-                  itemData={{ ...item, index: stepsData.length - index }}
-                  key={activeProduct.id + "-" + item.id}
-                  unique={activeProduct.id + "-" + item.id}
-                  deleteStep={deleteStep}
-                  updateStep={updateStep}
-                />
-              );
-            })}
-        </div>
-        <div className="toc-container">
-          <div className="toc-style">
-            <div className="js-toc">tts</div>
+          <div className="wrapper-step">
+            <div className="main-step js-toc-body-content">
+              {stepsData &&
+                stepsData.map((item, index) => {
+                  return (
+                    <Step
+                      itemData={{ ...item, index: stepsData.length - index }}
+                      key={activeProduct.id + "-" + item.id}
+                      unique={activeProduct.id + "-" + item.id}
+                      deleteStep={deleteStep}
+                      updateStep={updateStep}
+                    />
+                  );
+                })}
+            </div>
+            <div className="toc-container">
+              <div className="toc-style">
+                <div className="js-toc"></div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

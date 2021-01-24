@@ -12,7 +12,7 @@ var db = firebase.firestore();
 
 export default function Dashboard() {
   const [productsData, setProductsData] = useState(null);
-  const [activeProduct, setActiveProduct] = useState(null);
+  const [activeProduct, setActiveProduct] = useState({});
 
   useEffect(function () {
     listenProductsData();
@@ -67,15 +67,16 @@ export default function Dashboard() {
     setProductsData,
     activeProduct,
     setActiveProduct,
+    getFirstProduct
   };
-  console.log(activeProduct);
+
   return (
     <Provider value={providerProps}>
       <Layout className="main-layout">
         <Head />
         <Layout className="content-layout">
           <SideBar/>
-          {activeProduct && (activeProduct.id && <Product></Product>)}
+          <Product></Product>
         </Layout>
       </Layout>
     </Provider>

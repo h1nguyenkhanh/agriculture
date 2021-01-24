@@ -10,7 +10,7 @@ export default function Head() {
   return (
     <div style={{position: "fixed", width:"100%", height:"75px", zIndex: 9999, top: 0}}>
       <Header className="header">
-        <Link className="logo-link" to="/">
+        <Link className="logo-link" to="/dashboard">
           <img src="images/logo.png" alt="" className="logo-img" />
           <h1>Farm</h1>
         </Link>

@@ -1,0 +1,55 @@
+
+html, body {
+    height: 100%;
+  }
+
+#root, .App, .authen-container {
+    height: 100%;
+    
+}
+
+.login-logo {
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    border-radius: 999px;
+    top: -110px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+  
+.authen-container h1 {
+    text-align: center;
+}
+
+.authen-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.authen-container form {
+    position: relative;
+    width: 400px;
+     padding: 10px 30px;
+    padding-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+
+.authen-container form h1 {
+    margin: 30px 0;
+}
+
+.social-network-wrapper {
+    display: flex;
+    justify-content: center;
+}
+.social-network-wrapper img {
+    border-radius: 999px;
+    width: 40px;
+    margin: 10px 10px;
+    margin-bottom: 20px;
+    height: 40px;
+    cursor: pointer;
+}

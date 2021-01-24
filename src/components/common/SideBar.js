@@ -22,10 +22,30 @@ export default function SideBar() {
   const { productsData, setActiveProduct, activeProduct } = useContext(Context);
   const [productsDataDisplay, setProductsDataDisplay] = useState(null);
   const [newCategory, setNewCategory] = useState(null);
+  const [openKeys, setOpenKeys] = useState([]);
+  const [rootKeys, setRootKeys] = useState([])
+  const [defaultOpenKeys, setDefaultOpenKeys] = useState([])
+  
 
   useEffect(() => {
     setProductsDataDisplay(productsData);
+    if(productsData) {
+      let newDefaultKey = [];
+      productsData.forEach(item=>newDefaultKey.push(item))
+      setRootKeys(newDefaultKey)
+    }
   }, [productsData]);
+
+  useEffect(() => {
+    if(openKeys.length === 0 && activeProduct.parentId) {
+      setOpenKeys([activeProduct.parentId]);
+    } 
+    if(defaultOpenKeys.length === 0) {
+      setDefaultOpenKeys([activeProduct.parentId])
+    }
+      
+  }, [activeProduct]);
+  
 
   function searchCategory(event) {
     let searchText = Tools.deleteVnMark(event.target.value, false);
@@ -69,6 +89,15 @@ export default function SideBar() {
 
   function handleOnInputChange(event) {
     setNewCategory(event.target.value);
+  }
+
+  function onOpenChange(items) {
+    const latestOpenKey = items.find(key => openKeys.indexOf(key) === -1);
+    if (rootKeys.indexOf(latestOpenKey) === -1) {
+      setOpenKeys(items);
+    } else {
+      setOpenKeys(latestOpenKey ? [latestOpenKey] : defaultOpenKeys);
+    }
   }
 
   function renderProductList() {
@@ -121,18 +150,20 @@ export default function SideBar() {
         />
       </form>
       {
-        activeProduct
-        &&
         <Menu
-        defaultSelectedKeys={[activeProduct.id?activeProduct.id:'']}
-        defaultOpenKeys={[activeProduct.id?activeProduct.parentId:'']}
+        selectedKeys={[activeProduct.id?activeProduct.id:'']}
+        // defaultOpenKeys={[activeProduct.id?activeProduct.parentId:'']}
         // defaultSelectedKeys={['sa]']}
-        // defaultOpenKeys={['cam']}
+        // openKeys={[activeProduct.id?activeProduct.parentId:'']}
+        openKeys={openKeys}
         mode="inline"
+        onOpenChange={onOpenChange}
       >
         {renderProductList()}
       </Menu>
       }
+      
+      
       
     </Sider>
   );
