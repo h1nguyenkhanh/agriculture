@@ -33,8 +33,8 @@ const columns = [
       render: tags => (
         <>
           {tags.map(tag => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
+            let color = tag.length > 5 ? 'blue' : 'red';
+            if (tag === 'admin') {
               color = 'volcano';
             }
             return (
@@ -63,21 +63,21 @@ const columns = [
       username: "lvhdev99",
       name: 'Luu Hung',
       email: 'lvhdev99@gmail.com',
-      tags: ['nice', 'developer'],
+      tags: ['admin'],
     },
     {
       key: '2',
       username: "KhanhNguyen99",
       name: 'Khanh',
       email: 'khanhtd.vnua@gmail.com',
-      tags: ['loser'],
+      tags: ['expert'],
     },
     {
       key: '3',
       username: "HoNet1021",
       name: 'VanHung',
       email: 'tranha12@gmail.com',
-      tags: ['cool', 'teacher'],
+      tags: ['farmer'],
     },
   ];
   
