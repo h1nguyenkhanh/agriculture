@@ -30,7 +30,7 @@ function Test() {
         console.error("Lay du lieu that bai: ", error);
       });
   }
-  return <div>111</div>;
+  return <div>111</div>
 }
 
 export default Test;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Editor from "ckeditor5-custom-build/build/ckeditor";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import { DatePicker, Divider } from "antd";
+import { DatePicker, Divider,Comment, Avatar } from "antd";
 import { Button, Tooltip } from 'antd';
 import { CloseOutlined, SaveOutlined  } from '@ant-design/icons';
 import moment from 'moment';
@@ -108,7 +108,26 @@ function Step(props) {
   }
 
   // console.log(itemData.stepTime);
-  
+  const ExampleComment = ({ children }) => (
+    <Comment
+      actions={[<span key="comment-nested-reply-to">Reply to</span>]}
+      author={<a>Luu Hung</a>}
+      avatar={
+        <Avatar
+          src="images/male-farmer.png"
+          alt="Luu Hung"
+        />
+      }
+      content={
+        <p>
+          We supply a series of design principles, practical patterns and high quality design
+          resources (Sketch and Axure).
+        </p>
+      }
+    >
+      {children}
+    </Comment>
+  );
   return (
     <div className="step-wrapper">
       <div className="step-header">
@@ -168,9 +187,11 @@ function Step(props) {
             // console.log("Focus.", editor);
           }}
         />
+        <ExampleComment />
       </div>
     </div>
   );
+  
 }
 
 export default Step;

@@ -16,7 +16,7 @@ export default function MainRouter() {
             <Rigister/>
           </Route>
           <Route exact path="/account">
-            <Account/>
+            <Account />
           </Route>
           <Route exact path="/dashboard">
             <Dashboard />

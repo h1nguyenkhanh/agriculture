@@ -1,7 +1,7 @@
 import React from "react";
 
 import MainRouter from 'navigation/MainRouter'
-import Test from 'components/Test'
+// import Test from 'components/test'
 
 function App() {
   return (

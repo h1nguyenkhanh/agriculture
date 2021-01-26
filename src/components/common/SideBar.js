@@ -162,9 +162,6 @@ export default function SideBar() {
         {renderProductList()}
       </Menu>
       }
-      
-      
-      
     </Sider>
   );
 }
