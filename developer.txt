@@ -1,0 +1,3 @@
+- Tạo mới branch
+git branch -b [branch] 
+- Push code lên như bình thường
