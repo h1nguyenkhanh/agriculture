@@ -46,7 +46,7 @@ html, body {
     justify-content: center;
 }
 .social-network-wrapper img {
-    border-radius: 999px;
+    /* border-radius: 999px; */
     width: 40px;
     margin: 10px 10px;
     margin-bottom: 20px;

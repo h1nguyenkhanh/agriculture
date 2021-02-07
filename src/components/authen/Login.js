@@ -71,6 +71,7 @@ function Login() {
         <div className="social-network-wrapper">
             <img src="images/facebook.png" alt="" className="logo-img" />
             <img src="images/google.png" alt="" className="logo-img" />
+            <img src="images/mobile-phone.png" alt="" className="logo-img" />
         </div>
       </Form>
     </div>
