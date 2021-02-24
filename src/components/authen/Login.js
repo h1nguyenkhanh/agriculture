@@ -1,8 +1,11 @@
-
-import React from "react";
-import { Form, Input, Button, Checkbox } from "antd";
-import { Link } from "react-router-dom";
+import { Button, Form, Input } from "antd";
 import firebase from "firebase/config";
+import { useAuth, useProvideAuth } from "hooks/use-auth";
+import React, { useEffect } from "react";
+import {
+  Link, useHistory,
+  useLocation
+} from "react-router-dom";
 import "./css/login.css";
 
 const layout = {
@@ -14,45 +17,46 @@ const tailLayout = {
 };
 
 //Google singin provider
-var ggProvider = new firebase.auth.GoogleAuthProvider();
+// var ggProvider = new firebase.auth.GoogleAuthProvider();
 //Facebook singin provider
 var fbProvider = new firebase.auth.FacebookAuthProvider();
 
 function Login() {
-  function googleProvider () {
-    firebase.auth()
-      .signInWithPopup(ggProvider)
-      .then((result) => {
-      var credential = result.credential;
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      var token = credential.accessToken;
-      console.log(token);
-      // The signed-in user info.
-      var user = result.user;
-      console.log(user);
-      }).catch((error) => {
-        //thong bao loi
-        console.log(error);
-      });
-  };
+  let history = useHistory();
+  let location = useLocation();
+  let { from } = location.state || { from: { pathname: "/" } };
+  let {user, signin} = useAuth();
 
-  function facebookProvider () {
-    firebase.auth()
+  useEffect(()=>{
+    console.log(user);
+  }, [user])
+
+  function facebookProvider() {
+    firebase
+      .auth()
       .signInWithPopup(fbProvider)
       .then((result) => {
+        /** @type {firebase.auth.OAuthCredential} */
         var credential = result.credential;
 
         // The signed-in user info.
         var user = result.user;
-        console.log(user);
 
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         var accessToken = credential.accessToken;
-        console.log(accessToken);
 
+        // ...
       })
       .catch((error) => {
-        console.log(error);
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+
+        // ...
       });
   }
 
@@ -62,24 +66,48 @@ function Login() {
     }
     const phoneNumber = getPhoneNumberFromUserInput();
     const appVerifier = window.recaptchaVerifier;
-    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-        .then((confirmationResult) => {
-          // SMS sent. Prompt user to type the code from the message, then sign the
-          // user in with confirmationResult.confirm(code).
-          window.confirmationResult = confirmationResult;
-          // ...
-        }).catch((error) => {
-          console.log(error);
-        });
+    firebase
+      .auth()
+      .signInWithPhoneNumber(phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        // SMS sent. Prompt user to type the code from the message, then sign the
+        // user in with confirmationResult.confirm(code).
+        window.confirmationResult = confirmationResult;
+        // ...
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   const onFinish = (values) => {
-    console.log("Success:", values);
+    signin(values.email, values.password)
+    .then(user=>{
+      console.log(user);
+      history.replace({pathname: "/dashboard/products"});
+      // alert("Đăng nhập thành công!")
+    })
+    .catch(()=>{
+      alert("Sai email hoặc mật khẩu!")
+    })  
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
+  const handleOnClickSignUp = () => {
+    // console.log(authMethod);
+    // // if(!useProvideAuth.signup) return;
+    // authMethod.signup("user02@gmail.com","123456")
+  }
+
+  const handleOnClickSignIn = () => {
+    // // if(!useProvideAuth.signup) return;
+    // var t = authMethod.signin("user02@gmail.com","123456")
+    // console.log(t);
+
+  }
 
   return (
     <div className="authen-container">
@@ -92,16 +120,18 @@ function Login() {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
-       <img src="images/logo2.png" alt="" className="login-logo"/>
+        <img src="images/logo2.png" alt="" className="login-logo" />
 
         <h1>Đăng nhập</h1>
+        <Button onClick={handleOnClickSignUp}>Sign Up</Button>
+        <Button onClick={handleOnClickSignIn}>Sign In</Button>
         <Form.Item
-          label="Tài khoản"
-          name="username"
+          label="Email"
+          name="email"
           rules={[
             {
               required: true,
-              message: "Please input your username!",
+              message: "Email không được để trống!",
             },
           ]}
         >
@@ -114,7 +144,7 @@ function Login() {
           rules={[
             {
               required: true,
-              message: "Please input your password!",
+              message: "Mật khẩu không được để trống!",
             },
           ]}
         >
@@ -124,27 +154,33 @@ function Login() {
         <br />
         <Form.Item {...tailLayout}>
           <Button htmlType="submit" type="primary">
-            <Link to="dashboard">Đăng nhập</Link>
-          </Button>          
+            {/* <Link to="dashboard">Đăng nhập</Link> */}
+            Đăng nhập
+          </Button>
         </Form.Item>
-    
-          <p style={{textAlign: "center"}}>Bạn chư có tài khoản? <Link to="register">Đăng ký</Link></p>       
+
+        <p style={{ textAlign: "center" }}>
+          Bạn chư có tài khoản? <Link to="register">Đăng ký</Link>
+        </p>
         <div className="social-network-wrapper">
-            <img 
-              src="images/facebook.png" alt="" 
-              className="logo-img"
-              onClick={facebookProvider}
-            />
-            <img 
-              src="images/google.png" alt="" 
-              className="logo-img" 
-              onClick={googleProvider}
-            />
-            <img 
-              src="images/phone.png" alt="" 
-              className="logo-img" 
-              onClick={phoneProvider}  
-            />
+          <img
+            src="images/facebook.png"
+            alt=""
+            className="logo-img"
+            onClick={facebookProvider}
+          />
+          <img
+            src="images/google.png"
+            alt=""
+            className="logo-img"
+            // onClick={googleProvider}
+          />
+          <img
+            src="images/phone.png"
+            alt=""
+            className="logo-img"
+            onClick={phoneProvider}
+          />
         </div>
       </Form>
     </div>
@@ -152,4 +188,3 @@ function Login() {
 }
 
 export default Login;
-

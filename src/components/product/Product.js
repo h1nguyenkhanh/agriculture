@@ -73,6 +73,7 @@ const editorConfiguration = {
 
 function Product() {
   const {
+    currentUser,
     activeProduct,
     productsData,
     setProductsData,

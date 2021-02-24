@@ -105,15 +105,18 @@ Tools.getNewIdCode = (arr, str) => {
     return str.match(/\d+/g).map(Number)[0];
   }
   let maxValue = arr.reduce((a,b)=>{
-    console.log(a,b);
     if(getNumber(a.id)>getNumber(b.id)) return a;
     return b;
   })
   let result = getNumber(maxValue.id);
   result = ("000" + ++result).slice(-4)
 
-  console.log(result);
   return str+result
+}
+
+Tools.checkPhoneNumber = (phoneNumber)=>{
+  let regexPhoneNumber = /(09|01[2|6|8|9])+([0-9]{8})\b/g;
+  return regexPhoneNumber.test(phoneNumber);
 }
 
 export default Tools;

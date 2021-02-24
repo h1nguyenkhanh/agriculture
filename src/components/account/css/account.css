@@ -1,3 +1,7 @@
+.account-wrapper {
+    margin: 0 10px;
+    background-color: #fff;
+}
 .search{
     margin-top: 100px;
     width: 300px;
@@ -10,3 +14,4 @@
     margin-right: 100px;
     margin-top: 30px;
 }
+

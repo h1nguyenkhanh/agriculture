@@ -34,6 +34,8 @@ function AddProduct(props) {
           } else {
             product.items = [newProduct];
           }
+        })
+        .then(function (){
           db.collection(`products`)
             .doc(`${product.id}`)
             .update({

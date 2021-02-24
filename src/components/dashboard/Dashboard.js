@@ -6,20 +6,55 @@ import Provider from "components/context/Provider";
 import Product from "components/product/Product";
 import firebase from "firebase/config";
 import React, { useEffect, useState } from "react";
+import { useAuth } from "hooks/use-auth";
+import { BrowserRouter as Router, Switch, Route, useRouteMatch} from "react-router-dom";
+
+import {
+  Link, useHistory,
+  useLocation
+} from "react-router-dom";
+
 import "./css/dashboard.css";
+import Account from "components/account/Account";
 
 var db = firebase.firestore();
 
 export default function Dashboard() {
   const [productsData, setProductsData] = useState(null);
   const [activeProduct, setActiveProduct] = useState({});
+  const [currentUser, setCurrentUser] = useState(null)
+  let { path, url } = useRouteMatch();
+
+  const auth = useAuth();
+
+  let history = useHistory();
+  let location = useLocation();
+  let { from } = location.state || { from: { pathname: "/" } };
 
   useEffect(function () {
     listenProductsData();
     getFirstProduct();
   }, []);
 
+  useEffect(function () {
+    if(auth.user.email) {
+      console.log(auth.user.email);
+      db.collection("users").where("email", "==", auth.user.email)
+      .get()
+      .then(function(querySnapshot) {
+        const responseData = []
+        querySnapshot.forEach(function(doc) {
+          let data = { id: doc.id, ...doc.data() };
+          responseData.push(data);
+        });
+        setCurrentUser(responseData)
+      })
+      .catch(function(error) {
+          console.log("Error getting documents: ", error);
+      });
   
+    }
+  }, [auth]); 
 
 
   function listenProductsData() {
@@ -63,6 +98,7 @@ export default function Dashboard() {
   }
 
   const providerProps = {
+    currentUser,
     productsData,
     setProductsData,
     activeProduct,
@@ -73,10 +109,19 @@ export default function Dashboard() {
   return (
     <Provider value={providerProps}>
       <Layout className="main-layout">
-        <Head />
+        <Head currentUser={currentUser}/>
         <Layout className="content-layout">
-          <SideBar/>
-          <Product></Product>
+        <Switch>
+          <Route path={`${path}/products`}>
+            <>              
+            <SideBar/>
+            <Product></Product>
+            </>
+          </Route>
+          <Route path={`${path}/account`}>
+            <Account/>
+          </Route>
+          </Switch>
         </Layout>
       </Layout>
     </Provider>

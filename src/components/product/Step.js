@@ -99,7 +99,6 @@ function Step(props) {
     }
   }
 
-  function editorOnReady(editor) {}
   function onDatePickerChange(value, dateString) {
     let editData = {...currentData, stepTime: dateString};
     if(currentData.stepTime!==editData.stepTime) {
