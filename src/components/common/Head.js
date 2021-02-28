@@ -11,7 +11,7 @@ export default function Head({currentUser}) {
   let history = useHistory();
   console.log(currentUser);
   return (
-    <div style={{position: "fixed", width:"100%", height:"75px", zIndex: 9999, top: 0}}>
+    <div style={{position: "fixed", width:"100%", height:"75px", zIndex: 999, top: 0}}>
       <Header className="header">
         <Link className="logo-link" to="/dashboard/products">
           <img src="../images/logo.png" alt="" className="logo-img" />
