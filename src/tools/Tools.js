@@ -119,4 +119,9 @@ Tools.checkPhoneNumber = (phoneNumber)=>{
   return regexPhoneNumber.test(phoneNumber);
 }
 
+Tools.requireStrongPw = (password)=>{
+  let regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/g
+  return regexPassword.test(password);
+}
+
 export default Tools;

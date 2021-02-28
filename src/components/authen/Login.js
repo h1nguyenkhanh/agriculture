@@ -1,10 +1,10 @@
 import { Button, Form, Input } from "antd";
 import firebase from "firebase/config";
-import { useAuth, useProvideAuth } from "hooks/use-auth";
+import { useAuth } from "hooks/use-auth";
 import React, { useEffect } from "react";
 import {
   Link, useHistory,
-  useLocation
+  useLocation, Redirect
 } from "react-router-dom";
 import "./css/login.css";
 
@@ -17,19 +17,58 @@ const tailLayout = {
 };
 
 //Google singin provider
-// var ggProvider = new firebase.auth.GoogleAuthProvider();
+var ggProvider = new firebase.auth.GoogleAuthProvider();
+ggProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+firebase.auth().languageCode = 'vn';
+
+
+
 //Facebook singin provider
 var fbProvider = new firebase.auth.FacebookAuthProvider();
+
 
 function Login() {
   let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
-  let {user, signin} = useAuth();
+  let {user, signin, setUser} = useAuth();
 
   useEffect(()=>{
     console.log(user);
   }, [user])
+
+  
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      // const foundUser = JSON.parse(loggedInUser);
+      // history.replace({pathname: "/dashboard/products"});
+      setUser(JSON.parse(loggedInUser))
+      return <Redirect to="/dashboard/products" />
+    }
+  
+  function signinGoogle() {
+    firebase.auth()
+    .signInWithRedirect(ggProvider)
+    .then((result) => {
+      /** @type {firebase.auth.OAuthCredential} */
+      var credential = result.credential;
+
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      var token = credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+      // ...
+    }).catch((error) => {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
+  }
 
   function facebookProvider() {
     firebase
@@ -85,7 +124,10 @@ function Login() {
     .then(user=>{
       console.log(user);
       history.replace({pathname: "/dashboard/products"});
+      localStorage.setItem('user', JSON.stringify(user))
+
       // alert("Đăng nhập thành công!")
+
     })
     .catch(()=>{
       alert("Sai email hoặc mật khẩu!")
@@ -123,8 +165,6 @@ function Login() {
         <img src="images/logo2.png" alt="" className="login-logo" />
 
         <h1>Đăng nhập</h1>
-        <Button onClick={handleOnClickSignUp}>Sign Up</Button>
-        <Button onClick={handleOnClickSignIn}>Sign In</Button>
         <Form.Item
           label="Email"
           name="email"
@@ -146,6 +186,17 @@ function Login() {
               required: true,
               message: "Mật khẩu không được để trống!",
             },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                // if (!value || getFieldValue("password") === value) {
+                //   return Promise.resolve();
+                // }
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject("Mật khẩu không khớp!");
+              },
+            }),
           ]}
         >
           <Input.Password />
@@ -173,7 +224,7 @@ function Login() {
             src="images/google.png"
             alt=""
             className="logo-img"
-            // onClick={googleProvider}
+            onClick={signinGoogle}
           />
           <img
             src="images/phone.png"

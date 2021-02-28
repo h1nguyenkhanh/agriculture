@@ -47,7 +47,7 @@ export default function Dashboard() {
           let data = { id: doc.id, ...doc.data() };
           responseData.push(data);
         });
-        setCurrentUser(responseData)
+        setCurrentUser(responseData[0])
       })
       .catch(function(error) {
           console.log("Error getting documents: ", error);
@@ -105,7 +105,7 @@ export default function Dashboard() {
     setActiveProduct,
     getFirstProduct
   };
-
+console.log(currentUser);
   return (
     <Provider value={providerProps}>
       <Layout className="main-layout">

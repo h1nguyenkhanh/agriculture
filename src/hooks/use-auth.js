@@ -90,6 +90,7 @@ export function useProvideAuth() {
   // Return the user object and auth methods
   return {
     user,
+    setUser,
     signin,
     signup,
     signout,

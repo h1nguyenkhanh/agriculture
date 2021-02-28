@@ -139,10 +139,17 @@ function Register() {
           name="password"
           hasFeedback
           rules={[
-            {
-              required: true,
-              message: "Mật khẩu không được để trống!",
-            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if(!getFieldValue("password")) {
+                  return Promise.reject("Mật khẩu không được để trống!");
+                }
+                if (Tools.requireStrongPw(getFieldValue("password"))) {
+                  return Promise.resolve();
+                }
+                return Promise.reject("Mật khẩu quá yếu");
+              },
+            }),
           ]}
         >
           <Input.Password />

@@ -18,14 +18,9 @@ var db = firebase.firestore();
 
 const columns = [
     {
-        title: 'Username',
-        dataIndex: 'username',
-        key: 'username',
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name'
+      title: 'Tên người dùng',
+      dataIndex: 'username',
+      key: 'username',
     },
     {
       title: 'Email',
@@ -36,21 +31,7 @@ const columns = [
       title: 'Role',
       key: 'role',
       dataIndex: 'role',
-      // render: tags => (
-      //   <>
-      //     {tags.map(tag => {
-      //       let color = tag.length > 5 ? 'blue' : 'red';
-      //       if (tag === 'admin') {
-      //         color = 'volcano';
-      //       }
-      //       return (
-      //         <Tag color={color} key={tag}>
-      //           {tag.toUpperCase()}
-      //         </Tag>
-      //       );
-      //     })}
-      //   </>
-      // ),
+      render: role => role&&<Tag color={role==='member'?'green':role==='expert'?'blue':'red'}>{role.toUpperCase()} </Tag>
     },
     {
       title: 'Action',
@@ -148,12 +129,12 @@ function Account() {
                 }}
             />
             <div style={{paddingLeft:"100px"}}>
-                <h2>Member</h2>
+                <h2>Thành viên</h2>
             </div>
             {usersData && <Table 
                 className="table" 
                 columns={columns} 
-                dataSource={usersData} 
+                dataSource={usersData.map((item, index)=>{return {...item, key:index}})} 
             />}
         </div> 
     )

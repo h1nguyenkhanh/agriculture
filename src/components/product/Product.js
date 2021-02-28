@@ -83,6 +83,8 @@ function Product() {
 
   const [stepsData, setStepsData] = useState([]);
 
+  console.log(currentUser);
+
   useEffect(() => {
     getProcessSteps();
   }, [activeProduct]);
@@ -217,17 +219,23 @@ function Product() {
     });
   }
 
+  function expertOnly() {
+    alert('Chỉ chuyên gia mới có quyền thực hiện chức năng này!')
+  }
+
+  if(!currentUser) return null;
+
   return (
     <div className="main-content">
       {activeProduct && activeProduct.id && (
         <div>
           <h2>{activeProduct.name}</h2>
           <div className="wrapper-option">
-            <Button onClick={addNewStep} type="primary" icon={<PlusOutlined />}>
+            <Button onClick={currentUser.role==='member'?expertOnly:addNewStep} type="primary" icon={<PlusOutlined />}>
               Thêm công đoạn
             </Button>
             <Button
-              onClick={deleteProduct}
+              onClick={currentUser.role==='member'?expertOnly:deleteProduct}
               type="danger"
               icon={<CloseOutlined />}
               style={{ marginLeft: "10px" }}

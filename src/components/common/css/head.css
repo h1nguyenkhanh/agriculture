@@ -58,3 +58,10 @@
     align-items: center;
 }
 /*#endregion*/
+
+.signout {
+    position: absolute;
+    height: 30px;
+    right: 7px;
+    top: 60;
+}

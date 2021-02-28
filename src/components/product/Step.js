@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Editor from "ckeditor5-custom-build/build/ckeditor";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { DatePicker, Divider,Comment, Avatar } from "antd";
@@ -7,6 +7,7 @@ import { CloseOutlined, SaveOutlined  } from '@ant-design/icons';
 import moment from 'moment';
 import Tools from "tools/Tools";
 import "./css/step.css";
+import Context from '../context/Context'
 
 const editorConfiguration = {
   toolbar: {
@@ -73,6 +74,9 @@ const editorConfiguration = {
 };
 
 function Step(props) {
+  const { currentUser } = useContext(Context);
+  console.log(currentUser.role==='member');
+
   let { itemData, deleteStep, updateStep, unique } = props;
   let [currentData, setCurrentData] = useState(Tools.cloneObject(itemData));
  
@@ -113,26 +117,29 @@ function Step(props) {
       author={<a>Luu Hung</a>}
       avatar={
         <Avatar
-          src="images/male-farmer.png"
+          src="../images/male-farmer.png"
           alt="Luu Hung"
         />
       }
       content={
         <p>
-          We supply a series of design principles, practical patterns and high quality design
-          resources (Sketch and Axure).
+          Quy trình rất hay.
         </p>
       }
     >
       {children}
     </Comment>
   );
+
+  function expertOnly() {
+    alert('Chỉ chuyên gia mới có quyền thực hiện chức năng này!')
+  }
   return (
     <div className="step-wrapper">
       <div className="step-header">
         <h3 id={unique}>Bước {itemData.index}</h3>
         <div>
-        <Button shape='circle' danger type="primary" icon={<CloseOutlined />} onClick={()=>deleteStep(itemData.id)}></Button>
+        <Button shape='circle' danger type="primary" icon={<CloseOutlined />} onClick={currentUser.role==='member'?expertOnly:()=>deleteStep(itemData.id)}></Button>
         {
               itemData.stepTitle !== currentData.stepTitle
             ||
@@ -151,6 +158,7 @@ function Step(props) {
           editor={Editor}
           config={editorConfiguration}
           data={itemData.stepTitle}
+          disabled={currentUser.role==='member'}
           // onReady={editorOnReady}
           // onChange={headerEditorOnChange}
           onBlur={titleEditorOnBlur}
@@ -163,6 +171,7 @@ function Step(props) {
       <div className="step-time">
         <p>Trời gian</p>
           <DatePicker.RangePicker
+          disabled={currentUser.role==='member'}
           placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
           onChange={onDatePickerChange}
           defaultValue={[
@@ -176,6 +185,7 @@ function Step(props) {
       <Divider className="custom-divider" />
       <div className="step-content">
         <CKEditor
+          disabled={currentUser.role==='member'}
           editor={Editor}
           config={editorConfiguration}
           data={itemData.stepContent}
