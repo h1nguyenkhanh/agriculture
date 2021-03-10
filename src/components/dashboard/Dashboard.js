@@ -60,6 +60,7 @@ export default function Dashboard() {
   function listenProductsData() {
     db.collection("products").onSnapshot(
       (snapshot) => {
+        console.log('snapshoot:', snapshot);
         let responseData = [];
         snapshot.forEach(function (doc) {
           let data = { id: doc.id, ...doc.data() };

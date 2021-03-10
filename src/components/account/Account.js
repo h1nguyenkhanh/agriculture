@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import Head from "components/common/Head";
 import {
   Input,
@@ -12,6 +12,9 @@ import {
   Modal,
   Select,
 } from "antd";
+import * as admin from "firebase-admin";
+import Context from "components/context/Context";
+
 import "antd/dist/antd.css";
 import "./css/account.css";
 import { useAuth } from "hooks/use-auth";
@@ -36,15 +39,21 @@ const tailLayout = {
 
 const columns = [
   {
-    title: "Tên người dùng",
-    dataIndex: "username",
-    key: "username",
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
   },
   {
     title: "Email",
     dataIndex: "email",
     key: "email",
   },
+  {
+    title: "Tên người dùng",
+    dataIndex: "username",
+    key: "username",
+  },
+
   {
     title: "Role",
     key: "role",
@@ -60,39 +69,6 @@ const columns = [
         </Tag>
       ),
   },
-  {
-    title: "Action",
-    key: "action",
-    render: (text, record) => (
-      <Space size="middle">
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-
-const data = [
-  {
-    key: "1",
-    username: "lvhdev99",
-    name: "Luu Hung",
-    email: "lvhdev99@gmail.com",
-    tags: ["admin"],
-  },
-  {
-    key: "2",
-    username: "KhanhNguyen99",
-    name: "Khanh",
-    email: "khanhtd.vnua@gmail.com",
-    tags: ["expert"],
-  },
-  {
-    key: "3",
-    username: "HoNet1021",
-    name: "VanHung",
-    email: "tranha12@gmail.com",
-    tags: ["farmer"],
-  },
 ];
 
 function Account() {
@@ -101,37 +77,73 @@ function Account() {
   const [visible, setVisible] = useState(false);
   const [userClicked, setUserClicked] = useState(null);
   const [form] = Form.useForm();
+  const { currentUser } = useContext(Context);
+
+  // admin.initializeApp({
+  //   credential: admin.credential.applicationDefault(),
+  //   databaseURL: "https://react-firebase-app-de3b8.firebaseio.com",
+  // });
 
   useEffect(() => {
-    listenUsersData();
+    const listener = listenUsersData();
+    return listener;
   }, []);
 
   useEffect(() => {
-    console.log('thay doi');
-    form.setFieldsValue(userClicked)
-  }
-  , [userClicked]);
+    if (!userClicked) return;
+    form.setFieldsValue(userClicked);
+  }, [userClicked]);
 
   const showModal = () => {
     setVisible(true);
   };
 
-  const handleOk = () => {
-    setVisible(false);
-
-    // this.setState({ loading: true });
-    // setTimeout(() => {
-    //   this.setState({ loading: false, visible: false });
-    // }, 3000);
-  };
+  const handleOk = () => {};
 
   const handleCancel = () => {
     setVisible(false);
   };
 
   const handleFormSubmit = (values) => {
+    if(currentUser.role !== 'admin') {
+      alert('Chỉ quản trị viên mới có quyền thực hiện chức năng này!')
+      return
+    }
     console.log("Success:", values);
+    delete values.id;
+    delete values.email;
+    db.collection("users")
+      .doc(userClicked.id)
+      .update(values)
+      .then(function () {
+        alert("Cap nhat du lieu thanh cong");
+      })
+      .catch(function (error) {
+        console.error("Cap nhat du lieu that bai: ", error);
+      });
   };
+
+  const deleteUser = () => {
+    if(currentUser.role !== 'admin') {
+      alert('Chỉ quản trị viên mới có quyền thực hiện chức năng này!')
+      return
+    }
+    const result = window.confirm("Bạn có chắc không?");
+    if(!result) return;
+    db.collection("users")
+      .doc(userClicked.id)
+      .delete()
+      .then(function () {
+        alert("Xóa thành viên thành công");
+      })
+      .catch(function (error) {
+        console.error("Xoa du lieu that bai: ", error);
+      });
+  };
+
+  function adminOnly() {
+    
+  }
 
   function listenUsersData() {
     db.collection("users").onSnapshot(
@@ -150,7 +162,6 @@ function Account() {
       }
     );
   }
-  if(userClicked) console.log(userClicked)
   return (
     <div className={"account-wrapper"}>
       <Input
@@ -200,15 +211,20 @@ function Account() {
             initialValues={userClicked}
             name="control-hooks"
             onFinish={handleFormSubmit}
+            form={form}
           >
-            <Form.Item name="username" label="Tên người dùng">
-              <Input value={userClicked.username} />
+            <Form.Item name="id" label="ID">
+              <Input disabled />
             </Form.Item>
             <Form.Item name="email" label="Địa chỉ email">
-              <Input value={userClicked.email} />
+              <Input disabled />
             </Form.Item>
+            <Form.Item name="username" label="Tên người dùng">
+              <Input />
+            </Form.Item>
+
             <Form.Item name="phonenumber" label="Số điện thoại">
-              <Input value={userClicked.phonenumber} />
+              <Input />
             </Form.Item>
             <Form.Item name="role" label="Vai trò">
               <Select>
@@ -217,15 +233,21 @@ function Account() {
               </Select>
             </Form.Item>
 
-            <div style={{ textAlign: "center" }}>
+            <div style={{ justifyContent: "center", display: "flex" }}>
               <Button
                 key="submit"
                 type="primary"
                 htmlType="submit"
-                // loading={loading}
-                // onClick={handleOk}
               >
-                Lưu
+                Cập nhật
+              </Button>
+              <div style={{ marginRight: 10, marginLeft: 10 }}></div>
+              <Button
+                type="danger"
+                // loading={loading}
+                onClick={deleteUser}
+              >
+                Xóa
               </Button>
             </div>
           </Form>

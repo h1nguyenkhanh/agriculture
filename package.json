@@ -21,6 +21,7 @@
     "draft-js-plugins-editor": "^3.0.0",
     "draft-js-static-toolbar-plugin": "^3.0.1",
     "firebase": "^8.0.0",
+    "firebase-admin": "^9.5.0",
     "marked": "^1.2.5",
     "moment": "^2.29.1",
     "node-html-parser": "^2.0.0",

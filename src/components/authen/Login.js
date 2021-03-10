@@ -2,11 +2,10 @@ import { Button, Form, Input } from "antd";
 import firebase from "firebase/config";
 import { useAuth } from "hooks/use-auth";
 import React, { useEffect } from "react";
-import {
-  Link, useHistory,
-  useLocation, Redirect
-} from "react-router-dom";
+import { Link, useHistory, useLocation, Redirect } from "react-router-dom";
 import "./css/login.css";
+
+var db = firebase.firestore();
 
 const layout = {
   labelCol: { span: 8 },
@@ -18,56 +17,58 @@ const tailLayout = {
 
 //Google singin provider
 var ggProvider = new firebase.auth.GoogleAuthProvider();
-ggProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-firebase.auth().languageCode = 'vn';
-
-
+ggProvider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+firebase.auth().languageCode = "vn";
 
 //Facebook singin provider
 var fbProvider = new firebase.auth.FacebookAuthProvider();
-
 
 function Login() {
   let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
-  let {user, signin, setUser} = useAuth();
+  let { user, signin, setUser } = useAuth();
 
-  useEffect(()=>{
-    console.log(user);
-  }, [user])
+  useEffect(() => {
+    test();
+  }, [user]);
 
-  
-    const loggedInUser = localStorage.getItem("user");
-    if (loggedInUser) {
-      // const foundUser = JSON.parse(loggedInUser);
-      // history.replace({pathname: "/dashboard/products"});
-      setUser(JSON.parse(loggedInUser))
-      return <Redirect to="/dashboard/products" />
-    }
-  
+  const test = async () => {
+    
+  };
+
+  const loggedInUser = localStorage.getItem("user");
+  if (loggedInUser) {
+    // const foundUser = JSON.parse(loggedInUser);
+    // history.replace({pathname: "/dashboard/products"});
+    setUser(JSON.parse(loggedInUser));
+    return <Redirect to="/dashboard/products" />;
+  }
+
   function signinGoogle() {
-    firebase.auth()
-    .signInWithRedirect(ggProvider)
-    .then((result) => {
-      /** @type {firebase.auth.OAuthCredential} */
-      var credential = result.credential;
+    firebase
+      .auth()
+      .signInWithRedirect(ggProvider)
+      .then((result) => {
+        /** @type {firebase.auth.OAuthCredential} */
+        var credential = result.credential;
 
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      var token = credential.accessToken;
-      // The signed-in user info.
-      var user = result.user;
-      // ...
-    }).catch((error) => {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      // ...
-    });
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = credential.accessToken;
+        // The signed-in user info.
+        var user = result.user;
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+      });
   }
 
   function facebookProvider() {
@@ -119,19 +120,27 @@ function Login() {
       });
   }
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+    const snapshot = await db.collection("users").get();
+    let data = [];
+    snapshot.forEach(function (doc) {
+      data.push({ id: doc.id, ...doc.data() });
+    });
+    const found = data.find((item) => item.email === values.email);
+    if(!found) {
+      alert("Email không tồn tại trên hệ thống!");
+      return;
+    }
+
     signin(values.email, values.password)
-    .then(user=>{
-      console.log(user);
-      history.replace({pathname: "/dashboard/products"});
-      localStorage.setItem('user', JSON.stringify(user))
-
-      // alert("Đăng nhập thành công!")
-
-    })
-    .catch(()=>{
-      alert("Sai email hoặc mật khẩu!")
-    })  
+      .then((user) => {
+        console.log(user);
+        history.replace({ pathname: "/dashboard/products" });
+        localStorage.setItem("user", JSON.stringify(user));
+      })
+      .catch(() => {
+        alert("Sai email hoặc mật khẩu!");
+      });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -142,14 +151,13 @@ function Login() {
     // console.log(authMethod);
     // // if(!useProvideAuth.signup) return;
     // authMethod.signup("user02@gmail.com","123456")
-  }
+  };
 
   const handleOnClickSignIn = () => {
     // // if(!useProvideAuth.signup) return;
     // var t = authMethod.signin("user02@gmail.com","123456")
     // console.log(t);
-
-  }
+  };
 
   return (
     <div className="authen-container">
