@@ -48,7 +48,7 @@ function Login() {
   function signinGoogle() {
     firebase
       .auth()
-      .signInWithRedirect(ggProvider)
+      .signInWithPopup(ggProvider)
       .then((result) => {
         /** @type {firebase.auth.OAuthCredential} */
         var credential = result.credential;
@@ -57,9 +57,13 @@ function Login() {
         var token = credential.accessToken;
         // The signed-in user info.
         var user = result.user;
+        console.log('user', user);
+        history.replace({ pathname: "/dashboard/products" });
+        localStorage.setItem("user", JSON.stringify(user));
         // ...
       })
       .catch((error) => {
+        console.log(errorMessage);
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
