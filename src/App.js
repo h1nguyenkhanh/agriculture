@@ -1,12 +1,12 @@
 import React from "react";
 
-import MainRouter from 'navigation/MainRouter'
+import MainRouter from "navigation/MainRouter";
 // import Test from 'components/test'
 
 function App() {
   return (
     <div className="App">
-      <MainRouter/>
+      <MainRouter />
       {/* <Test/> */}
     </div>
   );

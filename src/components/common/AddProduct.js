@@ -58,10 +58,10 @@ function AddProduct(props) {
     }
     function handleOnSubmitAddProduct(event) {
       event.preventDefault();
-      if (Tools.checkInput(inputValue) === false) {
-        alert("Tên sản phẩm không được chứa kí tự đặc biệt!");
-        return;
-      }
+      // if (Tools.checkInput(inputValue) === false) {
+      //   alert("Tên sản phẩm không được chứa kí tự đặc biệt!");
+      //   return;
+      // }
       addNewProduct();
       setStateButtonAdd(true);
     }
