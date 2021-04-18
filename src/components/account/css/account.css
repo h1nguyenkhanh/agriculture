@@ -1,23 +1,24 @@
 .account-wrapper {
-    margin: 0 10px;
-    background-color: #fff;
+  margin: 0 10px;
+  background-color: #fff;
 }
-.search{
-    margin-top: 100px;
-    width: 300px;
-    height: 35px;
-    margin-left: 1200px;
+.search {
+  margin-top: 100px;
+  width: 300px;
+  height: 35px;
+  margin-left: 1200px;
 }
 
 .table {
-    margin-left: 100px;
-    margin-right: 100px;
-    margin-top: 30px;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-top: 30px;
 }
 
 .ant-table-tbody > tr.ant-table-row-level-0:hover > td {
-    background: rgba(207, 207, 255, 0.582);
-  }
+  background: rgba(207, 207, 255, 0.582);
+}
+
 .ant-table-tbody > tr.ant-table-row-level-0 {
-    cursor: pointer;
-  }
+  cursor: pointer;
+}
